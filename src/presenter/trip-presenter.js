@@ -17,7 +17,7 @@ export default class TripPresenter {
     render(this.tripListComponent, this.tripContainer);
     render(new EventEditView(), this.tripListComponent.getElement());
 
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 3; i++) {
       render(new EventView(), this.tripListComponent.getElement());
     }
   }

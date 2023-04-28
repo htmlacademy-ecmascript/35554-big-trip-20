@@ -1,15 +1,11 @@
-import TripInfoView from './view/trip-info-view';
-import FilterView from './view/filter-view';
-import {render, RenderPosition} from './render';
 import TripPresenter from './presenter/trip-presenter';
+import HeaderPresenter from './presenter/header-presenter';
 
 const siteTripMainElement = document.querySelector('.trip-main');
-const siteFilterElement = siteTripMainElement.querySelector('.trip-controls__filters');
 const tripEventsElement = document.querySelector('.trip-events');
 const tripPresenter = new TripPresenter({tripContainer: tripEventsElement});
+const headerPresenter = new HeaderPresenter({container: siteTripMainElement});
 
-render(new TripInfoView(), siteTripMainElement, RenderPosition.AFTERBEGIN);
-render(new FilterView(), siteFilterElement);
-
+headerPresenter.init();
 tripPresenter.init();
 
