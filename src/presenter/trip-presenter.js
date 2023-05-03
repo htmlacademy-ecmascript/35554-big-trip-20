@@ -8,17 +8,19 @@ import {render} from '../render';
 export default class TripPresenter {
   tripListComponent = new TripListView();
 
-  constructor({tripContainer}) {
+  constructor({tripContainer, eventsModel}) {
     this.tripContainer = tripContainer;
+    this.eventsModel = eventsModel;
   }
 
   init() {
+    this.tripEvents = [...this.eventsModel.getEvents()];
     render(new SortView(), this.tripListComponent.getElement());
     render(this.tripListComponent, this.tripContainer);
     render(new EventEditView(), this.tripListComponent.getElement());
 
-    for (let i = 0; i < 3; i++) {
-      render(new EventView(), this.tripListComponent.getElement());
+    for (let i = 0; i < this.tripEvents.length; i++) {
+      render(new EventView({eventTrip: this.tripEvents[i]}), this.tripListComponent.getElement());
     }
   }
 }

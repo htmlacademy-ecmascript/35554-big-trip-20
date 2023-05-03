@@ -1,5 +1,21 @@
-const WAYPOINTS = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'checkIn', 'sightseeing', 'restaurant'];
-const CITIES = ['Amsterdam', 'Chamonix', 'Geneva'];
+const WAYPOINTS = [
+  'Taxi',
+  'Bus',
+  'Train',
+  'Ship',
+  'Drive',
+  'Flight',
+  'Check-in',
+  'Sightseeing',
+  'Restaurant',
+];
+
+const CITIES = [
+  'Amsterdam',
+  'Chamonix',
+  'Geneva',
+];
+
 const OFFERS = [
   'Add luggage +€  50',
   'Switch to comfort +€  80',
@@ -9,7 +25,8 @@ const OFFERS = [
   'Lunch in city +€  30',
   'Order Uber +€  20',
 ];
-const DESCRIPTION = [
+
+const DESCRIPTIONS = [
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
   'Cras aliquet varius magna, non porta ligula feugiat eget.',
   'Fusce tristique felis at fermentum pharetra.',
@@ -21,6 +38,7 @@ const DESCRIPTION = [
   'Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus.',
   'In rutrum ac purus sit amet tempus.',
 ];
+
 const MIN_NUMBER = 10;
 const MAX_NUMBER = 1000;
 const MIN_COUNT_OFFER = 0;
@@ -29,5 +47,5 @@ const MIN_COUNT_DESCRIPTION = 1;
 const MAX_COUNT_DESCRIPTION = 5;
 
 
-export {WAYPOINTS, CITIES, MAX_NUMBER, MIN_NUMBER, OFFERS, DESCRIPTION,
+export {WAYPOINTS, CITIES, MAX_NUMBER, MIN_NUMBER, OFFERS, DESCRIPTIONS,
   MAX_COUNT_DESCRIPTION, MIN_COUNT_DESCRIPTION, MIN_COUNT_OFFER, MAX_COUNT_OFFER};

@@ -1,14 +1,18 @@
 import {createElement} from '../render';
+import {getRefineEventDate} from '../util';
 
-function createEventTemplate() {
+function createEventTemplate(eventTrip) {
+  const {eventDate, waypointType, city} = eventTrip;
+  console.log(eventDate);
+  const date = getRefineEventDate(eventDate);
   return (
     `<li class="trip-events__item">
        <div class="event">
-         <time class="event__date" datetime="2019-03-18">MAR 18</time>
+         <time class="event__date" datetime="2019-03-18">${date}</time>
          <div class="event__type">
            <img class="event__type-icon" width="42" height="42" src="img/icons/taxi.png" alt="Event type icon">
          </div>
-         <h3 class="event__title">Taxi Amsterdam</h3>
+         <h3 class="event__title">${waypointType} ${city}</h3>
          <div class="event__schedule">
            <p class="event__time">
              <time class="event__start-time" datetime="2019-03-18T10:30">10:30</time>
@@ -43,8 +47,12 @@ function createEventTemplate() {
 }
 
 export default class EventView {
+  constructor({eventTrip}) {
+    this.eventTrip = eventTrip;
+  }
+
   getTemplate() {
-    return createEventTemplate();
+    return createEventTemplate(this.eventTrip);
   }
 
   getElement() {
