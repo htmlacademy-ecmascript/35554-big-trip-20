@@ -8,7 +8,7 @@ function createEventTemplate(eventTrip) {
   const dateStart = getRefineTimeDate(dateTimeStart);
   const dateEnd = getRefineTimeDate(dateTimeEnd);
   const dateGap = getRefineTimeDifference(dateStart, dateEnd);
-  console.log(dateStart, dateGap);
+  console.log(dateStart, dateEnd, dateGap);
 
   const favoriteClassName = isFavorite ? 'event__favorite-btn event__favorite-btn--active' : 'event__favorite-btn';
 
