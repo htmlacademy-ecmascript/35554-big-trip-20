@@ -1,12 +1,12 @@
 import {createElement} from '../render';
 import {getRefineEventDate, getRefineTimeDate, getRefineTimeDifference} from '../util';
 
-function createEventTemplate(eventTrip) {
-  const {eventDate, waypointType, city, price, dateTimeStart, dateTimeEnd, isFavorite} = eventTrip;
-  console.log(dateTimeStart);
-  const date = getRefineEventDate(eventDate);
-  const dateStart = getRefineTimeDate(dateTimeStart);
-  const dateEnd = getRefineTimeDate(dateTimeEnd);
+function createEventTemplate(eventTrip, destinations, offers) {
+  const {price, dateTimeFrom, dateTimeTo, type, isFavorite} = eventTrip;
+
+  const date = getRefineEventDate(dateTimeFrom);
+  const dateStart = getRefineTimeDate(dateTimeFrom);
+  const dateEnd = getRefineTimeDate(dateTimeTo);
   const dateGap = getRefineTimeDifference(dateStart, dateEnd);
   console.log(dateStart, dateEnd, dateGap);
 
@@ -17,9 +17,9 @@ function createEventTemplate(eventTrip) {
        <div class="event">
          <time class="event__date" datetime="2019-03-18">${date}</time>
          <div class="event__type">
-           <img class="event__type-icon" width="42" height="42" src="img/icons/${waypointType}.png" alt="Event type icon">
+           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
          </div>
-         <h3 class="event__title">${waypointType} ${city}</h3>
+         <h3 class="event__title">${type} ${destinations.name}</h3>
          <div class="event__schedule">
            <p class="event__time">
              <time class="event__start-time" datetime="2019-03-18T10:30">${dateStart}</time>
@@ -49,17 +49,19 @@ function createEventTemplate(eventTrip) {
            <span class="visually-hidden">Open event</span>
          </button>
        </div>
-        </li>`
+    </li>`
   );
 }
 
 export default class EventView {
-  constructor({eventTrip}) {
+  constructor({eventTrip, destinations, offers}) {
     this.eventTrip = eventTrip;
+    this.destinations = destinations;
+    this.offers = offers;
   }
 
   getTemplate() {
-    return createEventTemplate(this.eventTrip);
+    return createEventTemplate(this.eventTrip, this.destinations, this.offers);
   }
 
   getElement() {

@@ -14,16 +14,22 @@ const CITIES = [
   'Amsterdam',
   'Chamonix',
   'Geneva',
+  'Tokyo',
+  'Seoul',
+  'New York',
+  'Manila',
+  'Moscow',
+  'Paris',
 ];
 
 const OFFERS = [
-  'Add luggage +€  50',
-  'Switch to comfort +€  80',
-  'Rent a car +€  200',
-  'Add breakfast +€  50',
-  'Book tickets +€  40',
-  'Lunch in city +€  30',
-  'Order Uber +€  20',
+  'Add luggage',
+  'Switch to comfort',
+  'Rent a car',
+  'Add breakfast',
+  'Book tickets',
+  'Lunch in city',
+  'Order Uber',
 ];
 
 const DESCRIPTIONS = [
@@ -42,7 +48,7 @@ const DESCRIPTIONS = [
 const MIN_NUMBER = 10;
 const MAX_NUMBER = 1000;
 const MIN_COUNT_OFFER = 0;
-const MAX_COUNT_OFFER = 2;
+const MAX_COUNT_OFFER = 5;
 const MIN_COUNT_DESCRIPTION = 1;
 const MAX_COUNT_DESCRIPTION = 5;
 

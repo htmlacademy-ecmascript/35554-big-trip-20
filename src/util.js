@@ -5,9 +5,9 @@ dayjs.extend(utc);
 dayjs.extend(duration);
 
 const DATA_FORMAT = 'MMM D';
-const TIME_FORMAT = 'h:mm';
-const DATA_GAP_FORMAT = 'hh[H] mm[M]';
-const MSEC_IN_SEC = 1000;
+const TIME_FORMAT = 'HH:mm';
+const DATA_FULL_FORMAT = 'DD/MM/YY HH:mm';
+const DATA_GAP_FORMAT = 'HH[H] mm[M]';
 const MSEC_IN_HOUR = 3600000;
 const MSEC_IN_DAY = 86400000;
 
@@ -18,7 +18,7 @@ function getRandomArrayElement(element) {
 function getRandomNumber(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min)) + min;
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function getRefineEventDate(date) {
@@ -27,6 +27,10 @@ function getRefineEventDate(date) {
 
 function getRefineTimeDate(date) {
   return date ? dayjs(date).utc().format(TIME_FORMAT) : '';
+}
+
+function getRefineFullDate(date) {
+  return date ? dayjs(date).utc().format(DATA_FULL_FORMAT) : '';
 }
 
 function getRefineTimeDifference(dateOne, dateTwo) {
@@ -47,4 +51,4 @@ function getRefineTimeDifference(dateOne, dateTwo) {
   return durationPoint;
 }
 
-export {getRandomArrayElement, getRandomNumber, getRefineEventDate, getRefineTimeDate,getRefineTimeDifference};
+export {getRandomArrayElement, getRandomNumber, getRefineEventDate, getRefineTimeDate,getRefineTimeDifference, getRefineFullDate};
