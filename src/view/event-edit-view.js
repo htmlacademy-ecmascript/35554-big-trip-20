@@ -50,7 +50,6 @@ function createEventEditTemplate(eventTrip, destination, offers) {
   const {basePrice, type, dateFrom, dateTo} = eventTrip;
   const dateFullFrom = getRefineFullDate(dateFrom);
   const dateFullTo = getRefineFullDate(dateTo);
-  debugger
   const citiesTemplate = createDestinationCitiesTemplate();
   const offersList = createOffersTemplate(offers);
   const picturesList = createPicturesDestinationTemplate(destination);

@@ -18,7 +18,6 @@ function createEventTemplate(eventTrip, destination, offers) {
   const dateStart = getRefineTimeDate(dateFrom);
   const dateEnd = getRefineTimeDate(dateTo);
   const dateGap = getRefineTimeDifference(dateTo, dateFrom);
-  console.log(dateStart, dateEnd, dateGap);
 
   const favoriteClassName = isFavorite
     ? 'event__favorite-btn event__favorite-btn--active'

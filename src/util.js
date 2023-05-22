@@ -8,7 +8,6 @@ const DATE_SHORT_FORMAT = 'MMM D';
 const DATE_TIME_FORMAT = 'YYYY-MM-DDTHH:mm';
 const TIME_FORMAT = 'HH:mm';
 const DATE_FULL_FORMAT = 'DD/MM/YY HH:mm';
-const DATA_GAP_FORMAT = 'HH[H] mm[M]';
 const MSEC_IN_HOUR = 3600000;
 const MSEC_IN_DAY = 86400000;
 
@@ -52,7 +51,6 @@ function getRefineTimeDifference(dateOne, dateTwo) {
       durationPoint = dayjs.duration(timeDifference).format('mm[M]');
       break;
   }
-  console.log(timeDifference, durationPoint);
   return durationPoint;
 }
 

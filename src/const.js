@@ -1,5 +1,3 @@
-import {getRandomArrayElement} from './util';
-
 const WAYPOINTS = [
   'Taxi',
   'Bus',
@@ -65,7 +63,6 @@ const EVENT_EMPTY = {
   destination: null,
   isFavorite: false
 };
-
 
 export {WAYPOINTS, CITIES, MAX_NUMBER, MIN_NUMBER, OFFERS, DESCRIPTIONS,
   MAX_COUNT_DESCRIPTION, MIN_COUNT_DESCRIPTION, MIN_COUNT_OFFER, MAX_COUNT_OFFER, EVENT_EMPTY};
