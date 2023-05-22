@@ -33,6 +33,14 @@ function createOffersTemplate(offers) {
     </div>`).join('');
 }
 
+function hasOffers(offers) {
+  return offers.length > 0 ? '<h3 class="event__section-title  event__section-title--offers">Offers</h3>' : '';
+}
+
+function hasDestination(destination) {
+  return destination.length > 0 ? '<h3 class="event__section-title  event__section-title--destination">Destination</h3>' : '';
+}
+
 function createPicturesDestinationTemplate(destination) {
   return destination.pictures.map((picture) => `
     <img class="event__photo" src="${picture.src}" alt="${picture.description}"/>`).join('');
@@ -101,7 +109,7 @@ function createEventEditTemplate(eventTrip, destination, offers) {
         </header>
         <section class="event__details">
           <section class="event__section  event__section--offers">
-            <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+            ${hasOffers(offers)}
 
             <div class="event__available-offers">
             ${offersList}
@@ -109,7 +117,7 @@ function createEventEditTemplate(eventTrip, destination, offers) {
           </section>
 
           <section class="event__section  event__section--destination">
-            <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+            ${hasDestination(destination)}
             <p class="event__destination-description">${destination.description}</p>
 
             <div class="event__photos-container">

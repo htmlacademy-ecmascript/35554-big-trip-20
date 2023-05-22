@@ -19,7 +19,7 @@ export default class TripPresenter {
     this.offers = [...this.eventsModel.getOffers()];
     render(new SortView(), this.tripListComponent.getElement());
     render(this.tripListComponent, this.tripContainer);
-debugger
+
     const eventEditing = this.tripEvents[0];
     const eventEditingDestination = this.destinations.find((destination) => destination.id === eventEditing.destination);
     const eventEditingOffers = this.offers.find((offer) => offer.type === eventEditing.type).offers;
