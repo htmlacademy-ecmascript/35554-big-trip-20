@@ -1,3 +1,5 @@
+import {getRandomArrayElement} from './util';
+
 const WAYPOINTS = [
   'Taxi',
   'Bus',
@@ -10,6 +12,8 @@ const WAYPOINTS = [
   'Restaurant',
 ];
 
+const DEFAULT_TYPE = 'Taxi';
+
 const CITIES = [
   'Amsterdam',
   'Chamonix',
@@ -19,7 +23,7 @@ const CITIES = [
   'New York',
   'Manila',
   'Moscow',
-  'Paris',
+  'Paris'
 ];
 
 const OFFERS = [
@@ -52,6 +56,16 @@ const MAX_COUNT_OFFER = 5;
 const MIN_COUNT_DESCRIPTION = 1;
 const MAX_COUNT_DESCRIPTION = 5;
 
+const EVENT_EMPTY = {
+  type: DEFAULT_TYPE,
+  dateFrom: null,
+  dateTo: null,
+  basePrice: 0,
+  offers: [],
+  destination: null,
+  isFavorite: false
+};
+
 
 export {WAYPOINTS, CITIES, MAX_NUMBER, MIN_NUMBER, OFFERS, DESCRIPTIONS,
-  MAX_COUNT_DESCRIPTION, MIN_COUNT_DESCRIPTION, MIN_COUNT_OFFER, MAX_COUNT_OFFER};
+  MAX_COUNT_DESCRIPTION, MIN_COUNT_DESCRIPTION, MIN_COUNT_OFFER, MAX_COUNT_OFFER, EVENT_EMPTY};

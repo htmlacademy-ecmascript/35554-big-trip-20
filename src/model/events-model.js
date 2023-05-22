@@ -1,10 +1,7 @@
 import {
   generateEvents,
   generateMockOffers,
-  getRandomDestination,
-  getRandomEvent,
   getRandomMockDestination,
-  getRandomMockOffers
 } from '../mock/event';
 import {MAX_COUNT_DESCRIPTION, MAX_COUNT_OFFER, MIN_COUNT_OFFER, WAYPOINTS} from '../const';
 import {getRandomArrayElement, getRandomNumber} from '../util';
@@ -17,10 +14,6 @@ export default class EventsModel {
     this.offers = this.generateOffers();
     this.events = this.generateEvents();
   }
-
-  // events = Array.from({length: EVENT_COUNT}, getRandomEvent);
-  // offers = generateMockOffers();
-  // destinations = getRandomMockDestination();
 
   getOffers() {
     return this.offers;
@@ -47,7 +40,6 @@ export default class EventsModel {
 
   generateEvents() {
     return Array.from({length: EVENT_COUNT}, () => {
-      debugger
       const type = getRandomArrayElement(WAYPOINTS);
       const destination = getRandomArrayElement(this.destinations);
 

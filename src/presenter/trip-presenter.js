@@ -17,14 +17,31 @@ export default class TripPresenter {
     this.tripEvents = [...this.eventsModel.getEvents()];
     this.destinations = [...this.eventsModel.getDestinations()];
     this.offers = [...this.eventsModel.getOffers()];
-    debugger
     render(new SortView(), this.tripListComponent.getElement());
     render(this.tripListComponent, this.tripContainer);
-    render(new EventEditView({eventTrip: this.tripEvents[0]}), this.tripListComponent.getElement());
+debugger
+    const eventEditing = this.tripEvents[0];
+    const eventEditingDestination = this.destinations.find((destination) => destination.id === eventEditing.destination);
+    const eventEditingOffers = this.offers.find((offer) => offer.type === eventEditing.type).offers;
+
+    render(new EventEditView({
+      eventTrip: eventEditing,
+      destination: eventEditingDestination,
+      offers: eventEditingOffers
+    }),
+    this.tripListComponent.getElement());
 
     for (let i = 1; i < this.tripEvents.length; i++) {
-      render(new EventView({eventTrip: this.tripEvents[i],
-        destinations: this.destinations, offers: this.offers}), this.tripListComponent.getElement());
+      const event = this.tripEvents[i];
+      const eventDestination = this.destinations.find((destination) => destination.id === event.destination);
+      const eventOffers = this.offers.find((offer) => offer.type === event.type).offers;
+
+      render(new EventView({
+        eventTrip: event,
+        destination: eventDestination,
+        offers: eventOffers
+      }),
+      this.tripListComponent.getElement());
     }
   }
 }

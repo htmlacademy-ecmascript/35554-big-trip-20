@@ -1,43 +1,52 @@
 import {createElement} from '../render';
-import {getRefineEventDate, getRefineTimeDate, getRefineTimeDifference} from '../util';
+import {getRefineEventDateShort, getRefineEventDateTime, getRefineTimeDate, getRefineTimeDifference} from '../util';
 
-function createEventTemplate(eventTrip, destinations, offers) {
-  const {price, dateTimeFrom, dateTimeTo, type, isFavorite} = eventTrip;
+function createEventOffersTemplate(offers) {
+  return offers.map((offer) => `
+  <li class="event__offer">
+    <span class="event__offer-title">${offer.title}</span>
+    &plus;&euro;&nbsp;
+    <span class="event__offer-price">${offer.price}</span>
+  </li>`).join('');
+}
 
-  const date = getRefineEventDate(dateTimeFrom);
-  const dateStart = getRefineTimeDate(dateTimeFrom);
-  const dateEnd = getRefineTimeDate(dateTimeTo);
-  const dateGap = getRefineTimeDifference(dateStart, dateEnd);
+function createEventTemplate(eventTrip, destination, offers) {
+  const {basePrice, dateFrom, dateTo, type, isFavorite} = eventTrip;
+
+  const date = getRefineEventDateTime(dateFrom);
+  const dateShort = getRefineEventDateShort(dateFrom);
+  const dateStart = getRefineTimeDate(dateFrom);
+  const dateEnd = getRefineTimeDate(dateTo);
+  const dateGap = getRefineTimeDifference(dateTo, dateFrom);
   console.log(dateStart, dateEnd, dateGap);
 
-  const favoriteClassName = isFavorite ? 'event__favorite-btn event__favorite-btn--active' : 'event__favorite-btn';
+  const favoriteClassName = isFavorite
+    ? 'event__favorite-btn event__favorite-btn--active'
+    : 'event__favorite-btn';
 
   return (
     `<li class="trip-events__item">
        <div class="event">
-         <time class="event__date" datetime="2019-03-18">${date}</time>
+         <time class="event__date" datetime="${date}">${dateShort}</time>
          <div class="event__type">
            <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
          </div>
-         <h3 class="event__title">${type} ${destinations.name}</h3>
+         <h3 class="event__title">${type} ${destination.name}</h3>
          <div class="event__schedule">
            <p class="event__time">
-             <time class="event__start-time" datetime="2019-03-18T10:30">${dateStart}</time>
+             <time class="event__start-time" datetime="${date}">${dateStart}</time>
              &mdash;
-             <time class="event__end-time" datetime="2019-03-18T11:00">${dateEnd}</time>
+             <time class="event__end-time" datetime="${getRefineEventDateTime(dateTo)}">${dateEnd}</time>
            </p>
            <p class="event__duration">${dateGap}</p>
          </div>
          <p class="event__price">
-           &euro;&nbsp;<span class="event__price-value">${price}</span>
+           &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
          </p>
          <h4 class="visually-hidden">Offers:</h4>
          <ul class="event__selected-offers">
-           <li class="event__offer">
-             <span class="event__offer-title">Order Uber</span>
-             &plus;&euro;&nbsp;
-             <span class="event__offer-price">20</span>
-           </li>
+         ${createEventOffersTemplate(offers)}
+
          </ul>
          <button class="${favoriteClassName}" type="button">
            <span class="visually-hidden">Add to favorite</span>
@@ -54,14 +63,14 @@ function createEventTemplate(eventTrip, destinations, offers) {
 }
 
 export default class EventView {
-  constructor({eventTrip, destinations, offers}) {
+  constructor({eventTrip, destination, offers}) {
     this.eventTrip = eventTrip;
-    this.destinations = destinations;
+    this.destination = destination;
     this.offers = offers;
   }
 
   getTemplate() {
-    return createEventTemplate(this.eventTrip, this.destinations, this.offers);
+    return createEventTemplate(this.eventTrip, this.destination, this.offers);
   }
 
   getElement() {
