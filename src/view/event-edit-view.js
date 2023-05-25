@@ -37,9 +37,9 @@ function hasOffers(offers) {
   return offers.length > 0 ? '<h3 class="event__section-title  event__section-title--offers">Offers</h3>' : '';
 }
 
-function hasDestination(destination) {
-  return destination.length > 0 ? '<h3 class="event__section-title  event__section-title--destination">Destination</h3>' : '';
-}
+// function hasDestination(destination) {
+//   return destination.length > 0 ? '<h3 class="event__section-title  event__section-title--destination">Destination</h3>' : '';
+// }
 
 function createPicturesDestinationTemplate(destination) {
   return destination.pictures.map((picture) => `
@@ -116,7 +116,7 @@ function createEventEditTemplate(eventTrip, destination, offers) {
           </section>
 
           <section class="event__section  event__section--destination">
-            ${hasDestination(destination)}
+            <h3 class="event__section-title  event__section-title--destination">Destination</h3>
             <p class="event__destination-description">${destination.description}</p>
 
             <div class="event__photos-container">
