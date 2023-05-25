@@ -1,6 +1,7 @@
+import {render} from '../framework/render';
 import TripInfoView from '../view/trip-info-view';
 import FilterView from '../view/filter-view';
-import {render, RenderPosition} from '../render';
+import {RenderPosition} from '../framework/render';
 
 export default class HeaderPresenter {
   constructor({container}) {

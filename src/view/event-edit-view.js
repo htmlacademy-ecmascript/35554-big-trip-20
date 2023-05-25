@@ -1,4 +1,4 @@
-import {createElement} from '../render';
+import AbstractView from '../framework/view/abstract-view';
 import {CITIES, EVENT_EMPTY, WAYPOINTS} from '../const';
 import {getRefineFullDate} from '../util';
 
@@ -34,12 +34,10 @@ function createOffersTemplate(offers) {
 }
 
 function hasOffers(offers) {
-  return offers.length > 0 ? '<h3 class="event__section-title  event__section-title--offers">Offers</h3>' : '';
+  return offers.length > 0
+    ? '<h3 class="event__section-title  event__section-title--offers">Offers</h3>'
+    : '';
 }
-
-// function hasDestination(destination) {
-//   return destination.length > 0 ? '<h3 class="event__section-title  event__section-title--destination">Destination</h3>' : '';
-// }
 
 function createPicturesDestinationTemplate(destination) {
   return destination.pictures.map((picture) => `
@@ -131,25 +129,19 @@ function createEventEditTemplate(eventTrip, destination, offers) {
   );
 }
 
-export default class EventEditView {
+export default class EventEditView extends AbstractView {
+  #eventTrip = null;
+  #destination = null;
+  #offers = null;
+
   constructor({eventTrip = EVENT_EMPTY, destination, offers}) {
-    this.eventTrip = eventTrip;
-    this.destination = destination;
-    this.offers = offers;
+    super();
+    this.#eventTrip = eventTrip;
+    this.#destination = destination;
+    this.#offers = offers;
   }
 
-  getTemplate() {
-    return createEventEditTemplate(this.eventTrip, this.destination, this.offers);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
+  get template() {
+    return createEventEditTemplate(this.#eventTrip, this.#destination, this.#offers);
   }
 }
