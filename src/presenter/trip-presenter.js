@@ -1,7 +1,7 @@
 import {render, replace} from '../framework/render';
 import TripListView from '../view/trip-list-view';
 import SortView from '../view/sort-view';
-// import TripListEmptyView from '../view/trip-list-empty-view';
+import TripListEmptyView from '../view/trip-list-empty-view';
 import EventView from '../view/event-view';
 import EventEditView from '../view/event-edit-view';
 
@@ -53,6 +53,10 @@ export default class TripPresenter {
       onFormSubmit: () => {
         replaceEditorToEvent();
         document.removeEventListener('keydown', escKeyDownHandler);
+      },
+      onToggleClick: () => {
+        replaceEditorToEvent();
+        document.removeEventListener('keydown', escKeyDownHandler);
       }
     });
 
@@ -68,6 +72,10 @@ export default class TripPresenter {
   }
 
   #renderTrip() {
+    if (this.#tripEvents.length === 0) {
+      render(new TripListEmptyView, this.#tripContainer);
+      return;
+    }
     render(new SortView(), this.#tripListComponent.element);
     render(this.#tripListComponent, this.#tripContainer);
 

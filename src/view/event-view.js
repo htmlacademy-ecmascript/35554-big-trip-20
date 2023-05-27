@@ -1,5 +1,10 @@
 import AbstractView from '../framework/view/abstract-view';
-import {getRefineEventDateShort, getRefineEventDateTime, getRefineTimeDate, getRefineTimeDifference} from '../util';
+import {
+  getRefineEventDateShort,
+  getRefineEventDateTime,
+  getRefineTimeDate,
+  getTimeDifference
+} from '../util';
 
 function createEventOffersTemplate(offers) {
   return offers.map((offer) => `
@@ -17,7 +22,8 @@ function createEventTemplate(eventTrip, destination, offers) {
   const dateShort = getRefineEventDateShort(dateFrom);
   const dateStart = getRefineTimeDate(dateFrom);
   const dateEnd = getRefineTimeDate(dateTo);
-  const dateGap = getRefineTimeDifference(dateTo, dateFrom);
+  const dateGap = getTimeDifference(dateFrom, dateTo);
+  console.log(dateGap);
 
   const favoriteClassName = isFavorite
     ? 'event__favorite-btn event__favorite-btn--active'
