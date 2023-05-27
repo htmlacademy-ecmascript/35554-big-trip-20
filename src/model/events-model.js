@@ -9,36 +9,40 @@ import {getRandomArrayElement, getRandomNumber} from '../util';
 const EVENT_COUNT = 4;
 
 export default class EventsModel {
+  #events = null;
+  #destinations = null;
+  #offers = null;
+
   constructor() {
-    this.destinations = this.generateDestinations();
-    this.offers = this.generateOffers();
-    this.events = this.generateEvents();
+    this.#destinations = this.#generateDestinations();
+    this.#offers = this.#generateOffers();
+    this.#events = this.#generateEvents();
   }
 
-  getOffers() {
-    return this.offers;
+  get offers() {
+    return this.#offers;
   }
 
-  getDestinations() {
-    return this.destinations;
+  get destinations() {
+    return this.#destinations;
   }
 
-  getEvents() {
-    return this.events;
+  get events() {
+    return this.#events;
   }
 
-  generateDestinations() {
+  #generateDestinations() {
     return Array.from({length:MAX_COUNT_DESCRIPTION}, () => getRandomMockDestination());
   }
 
-  generateOffers() {
+  #generateOffers() {
     return WAYPOINTS.map((type) => ({
       type,
       offers: Array.from({length: getRandomNumber(MIN_COUNT_OFFER, MAX_COUNT_OFFER)}, generateMockOffers)
     }));
   }
 
-  generateEvents() {
+  #generateEvents() {
     return Array.from({length: EVENT_COUNT}, () => {
       const type = getRandomArrayElement(WAYPOINTS);
       const destination = getRandomArrayElement(this.destinations);

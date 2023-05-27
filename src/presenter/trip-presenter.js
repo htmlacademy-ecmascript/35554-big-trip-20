@@ -6,42 +6,48 @@ import EventView from '../view/event-view';
 import EventEditView from '../view/event-edit-view';
 
 export default class TripPresenter {
-  tripListComponent = new TripListView();
+  #tripContainer = null;
+  #eventsModel = null;
+
+  #tripListComponent = new TripListView();
+  #tripEvents = [];
+  #destinations = [];
+  #offers = [];
 
   constructor({tripContainer, eventsModel}) {
-    this.tripContainer = tripContainer;
-    this.eventsModel = eventsModel;
+    this.#tripContainer = tripContainer;
+    this.#eventsModel = eventsModel;
   }
 
   init() {
-    this.tripEvents = [...this.eventsModel.getEvents()];
-    this.destinations = [...this.eventsModel.getDestinations()];
-    this.offers = [...this.eventsModel.getOffers()];
-    render(new SortView(), this.tripListComponent.element);
-    render(this.tripListComponent, this.tripContainer);
+    this.#tripEvents = [...this.#eventsModel.events];
+    this.#destinations = [...this.#eventsModel.destinations];
+    this.#offers = [...this.#eventsModel.offers];
+    render(new SortView(), this.#tripListComponent.element);
+    render(this.#tripListComponent, this.#tripContainer);
 
-    const eventEditing = this.tripEvents[0];
-    const eventEditingDestination = this.destinations.find((destination) => destination.id === eventEditing.destination);
-    const eventEditingOffers = this.offers.find((offer) => offer.type === eventEditing.type).offers;
+    const eventEditing = this.#tripEvents[0];
+    const eventEditingDestination = this.#destinations.find((destination) => destination.id === eventEditing.destination);
+    const eventEditingOffers = this.#offers.find((offer) => offer.type === eventEditing.type).offers;
 
     render(new EventEditView({
       eventTrip: eventEditing,
       destination: eventEditingDestination,
       offers: eventEditingOffers
     }),
-    this.tripListComponent.element);
+    this.#tripListComponent.element);
 
-    for (let i = 1; i < this.tripEvents.length; i++) {
-      const event = this.tripEvents[i];
-      const eventDestination = this.destinations.find((destination) => destination.id === event.destination);
-      const eventOffers = this.offers.find((offer) => offer.type === event.type).offers;
+    for (let i = 1; i < this.#tripEvents.length; i++) {
+      const event = this.#tripEvents[i];
+      const eventDestination = this.#destinations.find((destination) => destination.id === event.destination);
+      const eventOffers = this.#offers.find((offer) => offer.type === event.type).offers;
 
       render(new EventView({
         eventTrip: event,
         destination: eventDestination,
         offers: eventOffers
       }),
-      this.tripListComponent.element);
+      this.#tripListComponent.element);
     }
   }
 }
