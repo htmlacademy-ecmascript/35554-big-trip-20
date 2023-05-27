@@ -103,6 +103,9 @@ function createEventEditTemplate(eventTrip, destination, offers) {
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
           <button class="event__reset-btn" type="reset">Cancel</button>
+          <button class="event__rollup-btn" type="button">
+            <span class="visually-hidden">Open event</span>
+          </button>
         </header>
         <section class="event__details">
           <section class="event__section  event__section--offers">
@@ -133,15 +136,23 @@ export default class EventEditView extends AbstractView {
   #eventTrip = null;
   #destination = null;
   #offers = null;
+  #handleFormSubmit = null;
 
-  constructor({eventTrip = EVENT_EMPTY, destination, offers}) {
+  constructor({eventTrip = EVENT_EMPTY, destination, offers, onFormSubmit}) {
     super();
     this.#eventTrip = eventTrip;
     this.#destination = destination;
     this.#offers = offers;
+    this.#handleFormSubmit = onFormSubmit;
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
   }
 
   get template() {
     return createEventEditTemplate(this.#eventTrip, this.#destination, this.#offers);
   }
+
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormSubmit();
+  };
 }

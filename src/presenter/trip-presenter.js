@@ -1,4 +1,4 @@
-import {render} from '../framework/render';
+import {render, replace} from '../framework/render';
 import TripListView from '../view/trip-list-view';
 import SortView from '../view/sort-view';
 // import TripListEmptyView from '../view/trip-list-empty-view';
@@ -26,18 +26,7 @@ export default class TripPresenter {
     render(new SortView(), this.#tripListComponent.element);
     render(this.#tripListComponent, this.#tripContainer);
 
-    const eventEditing = this.#tripEvents[0];
-    const eventEditingDestination = this.#destinations.find((destination) => destination.id === eventEditing.destination);
-    const eventEditingOffers = this.#offers.find((offer) => offer.type === eventEditing.type).offers;
-
-    render(new EventEditView({
-      eventTrip: eventEditing,
-      destination: eventEditingDestination,
-      offers: eventEditingOffers
-    }),
-    this.#tripListComponent.element);
-
-    for (let i = 1; i < this.#tripEvents.length; i++) {
+    for (let i = 0; i < this.#tripEvents.length; i++) {
       const event = this.#tripEvents[i];
       const eventDestination = this.#destinations.find((destination) => destination.id === event.destination);
       const eventOffers = this.#offers.find((offer) => offer.type === event.type).offers;
@@ -51,7 +40,42 @@ export default class TripPresenter {
   }
 
   #renderEvent({eventTrip, destination, offers}) {
-    const eventComponent = new EventView({eventTrip, destination, offers});
+    const escKeyDownHandler = (evt) => {
+      if (evt.key === 'Escape') {
+        evt.preventDefault();
+        replaceEditorToEvent();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
+    };
+
+    const eventComponent = new EventView({
+      eventTrip,
+      destination,
+      offers,
+      onEditClick: () => {
+        replaceEventToEditor();
+        document.addEventListener('keydown', escKeyDownHandler);
+      }
+    });
+
+    const eventEditComponent = new EventEditView({
+      eventTrip,
+      destination,
+      offers,
+      onFormSubmit: () => {
+        replaceEditorToEvent();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
+    });
+
+    function replaceEventToEditor() {
+      replace(eventEditComponent, eventComponent);
+    }
+
+    function replaceEditorToEvent() {
+      replace(eventComponent, eventEditComponent);
+    }
+
     render(eventComponent, this.#tripListComponent.element);
   }
 }
