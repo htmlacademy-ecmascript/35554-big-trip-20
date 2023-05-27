@@ -23,20 +23,8 @@ export default class TripPresenter {
     this.#tripEvents = [...this.#eventsModel.events];
     this.#destinations = [...this.#eventsModel.destinations];
     this.#offers = [...this.#eventsModel.offers];
-    render(new SortView(), this.#tripListComponent.element);
-    render(this.#tripListComponent, this.#tripContainer);
 
-    for (let i = 0; i < this.#tripEvents.length; i++) {
-      const event = this.#tripEvents[i];
-      const eventDestination = this.#destinations.find((destination) => destination.id === event.destination);
-      const eventOffers = this.#offers.find((offer) => offer.type === event.type).offers;
-
-      this.#renderEvent({
-        eventTrip: event,
-        destination: eventDestination,
-        offers: eventOffers
-      });
-    }
+    this.#renderTrip();
   }
 
   #renderEvent({eventTrip, destination, offers}) {
@@ -77,5 +65,22 @@ export default class TripPresenter {
     }
 
     render(eventComponent, this.#tripListComponent.element);
+  }
+
+  #renderTrip() {
+    render(new SortView(), this.#tripListComponent.element);
+    render(this.#tripListComponent, this.#tripContainer);
+
+    for (let i = 0; i < this.#tripEvents.length; i++) {
+      const event = this.#tripEvents[i];
+      const eventDestination = this.#destinations.find((destination) => destination.id === event.destination);
+      const eventOffers = this.#offers.find((offer) => offer.type === event.type).offers;
+
+      this.#renderEvent({
+        eventTrip: event,
+        destination: eventDestination,
+        offers: eventOffers
+      });
+    }
   }
 }
