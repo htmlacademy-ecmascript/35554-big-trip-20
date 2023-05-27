@@ -4,7 +4,7 @@ import {
   getRefineEventDateTime,
   getRefineTimeDate,
   getTimeDifference
-} from '../util';
+} from '../utils/date';
 
 function createEventOffersTemplate(offers) {
   return offers.map((offer) => `
@@ -23,7 +23,6 @@ function createEventTemplate(eventTrip, destination, offers) {
   const dateStart = getRefineTimeDate(dateFrom);
   const dateEnd = getRefineTimeDate(dateTo);
   const dateGap = getTimeDifference(dateFrom, dateTo);
-  console.log(dateGap);
 
   const favoriteClassName = isFavorite
     ? 'event__favorite-btn event__favorite-btn--active'

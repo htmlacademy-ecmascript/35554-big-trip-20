@@ -1,4 +1,4 @@
-import {getRandomArrayElement, getRandomNumber} from '../util';
+import {getRandomArrayElement, getRandomNumber} from '../utils/common';
 import {
   CITIES,
   DESCRIPTIONS,

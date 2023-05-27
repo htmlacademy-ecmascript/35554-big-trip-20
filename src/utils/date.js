@@ -16,18 +16,6 @@ const HOUR_IN_DAY = 24;
 
 const MSEC_IN_HOUR = MIN_IN_HOUR * SEC_IN_MIN * MSEC_IN_SEC;
 const MSEC_IN_DAY = HOUR_IN_DAY * MSEC_IN_HOUR;
-// const MSEC_IN_HOUR = 3600000;
-// const MSEC_IN_DAY = 86400000;
-
-function getRandomArrayElement(element) {
-  return element[Math.floor(Math.random() * element.length)];
-}
-
-function getRandomNumber(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
 
 function getRefineEventDateTime(date) {
   return date ? dayjs(date).utc().format(DATE_TIME_FORMAT) : '';
@@ -63,8 +51,6 @@ function getTimeDifference(dateFrom, dateTo) {
 }
 
 export {
-  getRandomArrayElement,
-  getRandomNumber,
   getRefineEventDateShort,
   getRefineTimeDate,
   getTimeDifference,

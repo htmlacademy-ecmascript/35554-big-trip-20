@@ -1,6 +1,6 @@
 import AbstractView from '../framework/view/abstract-view';
 import {CITIES, EVENT_EMPTY, WAYPOINTS} from '../const';
-import {getRefineFullDate} from '../util';
+import {getRefineFullDate} from '../utils/date';
 
 function createEventEditTypeTemplate(currentType) {
   return WAYPOINTS.map((type) => `

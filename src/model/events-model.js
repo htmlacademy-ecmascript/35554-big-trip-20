@@ -4,7 +4,7 @@ import {
   getRandomMockDestination,
 } from '../mock/event';
 import {MAX_COUNT_DESCRIPTION, MAX_COUNT_OFFER, MIN_COUNT_OFFER, WAYPOINTS} from '../const';
-import {getRandomArrayElement, getRandomNumber} from '../util';
+import {getRandomArrayElement, getRandomNumber} from '../utils/common';
 
 const EVENT_COUNT = 4;
 
