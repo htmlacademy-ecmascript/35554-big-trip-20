@@ -42,12 +42,16 @@ export default class TripPresenter {
       const eventDestination = this.#destinations.find((destination) => destination.id === event.destination);
       const eventOffers = this.#offers.find((offer) => offer.type === event.type).offers;
 
-      render(new EventView({
+      this.#renderEvent({
         eventTrip: event,
         destination: eventDestination,
         offers: eventOffers
-      }),
-      this.#tripListComponent.element);
+      });
     }
+  }
+
+  #renderEvent({eventTrip, destination, offers}) {
+    const eventComponent = new EventView({eventTrip, destination, offers});
+    render(eventComponent, this.#tripListComponent.element);
   }
 }
