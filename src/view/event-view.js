@@ -1,5 +1,10 @@
-import {createElement} from '../render';
-import {getRefineEventDateShort, getRefineEventDateTime, getRefineTimeDate, getRefineTimeDifference} from '../util';
+import AbstractView from '../framework/view/abstract-view';
+import {
+  getRefineEventDateShort,
+  getRefineEventDateTime,
+  getRefineTimeDate,
+  getTimeDifference
+} from '../utils/date';
 
 function createEventOffersTemplate(offers) {
   return offers.map((offer) => `
@@ -17,7 +22,7 @@ function createEventTemplate(eventTrip, destination, offers) {
   const dateShort = getRefineEventDateShort(dateFrom);
   const dateStart = getRefineTimeDate(dateFrom);
   const dateEnd = getRefineTimeDate(dateTo);
-  const dateGap = getRefineTimeDifference(dateTo, dateFrom);
+  const dateGap = getTimeDifference(dateFrom, dateTo);
 
   const favoriteClassName = isFavorite
     ? 'event__favorite-btn event__favorite-btn--active'
@@ -61,25 +66,29 @@ function createEventTemplate(eventTrip, destination, offers) {
   );
 }
 
-export default class EventView {
-  constructor({eventTrip, destination, offers}) {
-    this.eventTrip = eventTrip;
-    this.destination = destination;
-    this.offers = offers;
+export default class EventView extends AbstractView {
+  #eventTrip = null;
+  #destination = null;
+  #offers = null;
+  #handleEditClick = null;
+
+  constructor({eventTrip, destination, offers, onEditClick}) {
+    super();
+    this.#eventTrip = eventTrip;
+    this.#destination = destination;
+    this.#offers = offers;
+    this.#handleEditClick = onEditClick;
+
+    this.element.querySelector('.event__rollup-btn')
+      .addEventListener('click', this.#editClickHandler);
   }
 
-  getTemplate() {
-    return createEventTemplate(this.eventTrip, this.destination, this.offers);
+  get template() {
+    return createEventTemplate(this.#eventTrip, this.#destination, this.#offers);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
+  #editClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleEditClick();
+  };
 }

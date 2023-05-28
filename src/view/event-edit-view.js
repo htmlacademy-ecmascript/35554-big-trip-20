@@ -1,6 +1,6 @@
-import {createElement} from '../render';
+import AbstractView from '../framework/view/abstract-view';
 import {CITIES, EVENT_EMPTY, WAYPOINTS} from '../const';
-import {getRefineFullDate} from '../util';
+import {getRefineFullDate} from '../utils/date';
 
 function createEventEditTypeTemplate(currentType) {
   return WAYPOINTS.map((type) => `
@@ -34,11 +34,9 @@ function createOffersTemplate(offers) {
 }
 
 function hasOffers(offers) {
-  return offers.length > 0 ? '<h3 class="event__section-title  event__section-title--offers">Offers</h3>' : '';
-}
-
-function hasDestination(destination) {
-  return destination.length > 0 ? '<h3 class="event__section-title  event__section-title--destination">Destination</h3>' : '';
+  return offers.length > 0
+    ? '<h3 class="event__section-title  event__section-title--offers">Offers</h3>'
+    : '';
 }
 
 function createPicturesDestinationTemplate(destination) {
@@ -105,6 +103,9 @@ function createEventEditTemplate(eventTrip, destination, offers) {
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
           <button class="event__reset-btn" type="reset">Cancel</button>
+          <button class="event__rollup-btn" type="button">
+            <span class="visually-hidden">Open event</span>
+          </button>
         </header>
         <section class="event__details">
           <section class="event__section  event__section--offers">
@@ -116,7 +117,7 @@ function createEventEditTemplate(eventTrip, destination, offers) {
           </section>
 
           <section class="event__section  event__section--destination">
-            ${hasDestination(destination)}
+            <h3 class="event__section-title  event__section-title--destination">Destination</h3>
             <p class="event__destination-description">${destination.description}</p>
 
             <div class="event__photos-container">
@@ -131,25 +132,37 @@ function createEventEditTemplate(eventTrip, destination, offers) {
   );
 }
 
-export default class EventEditView {
-  constructor({eventTrip = EVENT_EMPTY, destination, offers}) {
-    this.eventTrip = eventTrip;
-    this.destination = destination;
-    this.offers = offers;
+export default class EventEditView extends AbstractView {
+  #eventTrip = null;
+  #destination = null;
+  #offers = null;
+  #handleFormSubmit = null;
+  #handleToggleClick = null;
+
+  constructor({eventTrip = EVENT_EMPTY, destination, offers, onFormSubmit, onToggleClick}) {
+    super();
+    this.#eventTrip = eventTrip;
+    this.#destination = destination;
+    this.#offers = offers;
+    this.#handleFormSubmit = onFormSubmit;
+    this.#handleToggleClick = onToggleClick;
+
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__rollup-btn')
+      .addEventListener('click', this.#toggleClickHandler);
   }
 
-  getTemplate() {
-    return createEventEditTemplate(this.eventTrip, this.destination, this.offers);
+  get template() {
+    return createEventEditTemplate(this.#eventTrip, this.#destination, this.#offers);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormSubmit();
+  };
 
-  removeElement() {
-    this.element = null;
-  }
+  #toggleClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleToggleClick();
+  };
 }
