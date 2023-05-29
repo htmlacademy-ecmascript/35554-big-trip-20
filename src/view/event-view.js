@@ -4,7 +4,7 @@ import {
   getRefineEventDateTime,
   getRefineTimeDate,
   getTimeDifference
-} from '../utils/date';
+} from '../utils/events';
 
 function createEventOffersTemplate(offers) {
   return offers.map((offer) => `

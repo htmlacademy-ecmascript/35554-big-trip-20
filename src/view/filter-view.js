@@ -29,6 +29,8 @@ function createFilterTemplate() {
 }
 
 export default class FilterView extends AbstractView {
+  #filters = [];
+
   get template() {
     return createFilterTemplate();
   }
