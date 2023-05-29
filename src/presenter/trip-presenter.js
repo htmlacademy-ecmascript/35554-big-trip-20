@@ -1,4 +1,4 @@
-import {render, replace} from '../framework/render';
+import {render, RenderPosition, replace} from '../framework/render';
 import TripListView from '../view/trip-list-view';
 import SortView from '../view/sort-view';
 import TripListEmptyView from '../view/trip-list-empty-view';
@@ -10,6 +10,9 @@ export default class TripPresenter {
   #eventsModel = null;
 
   #tripListComponent = new TripListView();
+  #sortComponent = new SortView();
+  #tripEmptyComponent = new TripListEmptyView();
+
   #tripEvents = [];
   #destinations = [];
   #offers = [];
@@ -25,6 +28,10 @@ export default class TripPresenter {
     this.#offers = [...this.#eventsModel.offers];
 
     this.#renderTrip();
+  }
+
+  #renderSort() {
+    render(this.#sortComponent, this.#tripListComponent.element, RenderPosition.AFTERBEGIN);
   }
 
   #renderEvent({eventTrip, destination, offers}) {
@@ -71,24 +78,45 @@ export default class TripPresenter {
     render(eventComponent, this.#tripListComponent.element);
   }
 
+  #renderEvents() {
+    this.#tripEvents.forEach((event) => this.#renderEvent({
+      eventTrip: event,
+      destination: this.#destinations.find((destination) => destination.id === event.destination),
+      offers: this.#offers.find((offer) => offer.type === event.type).offers
+    }));
+  }
+
+  #renderTripEmpty() {
+    render(this.#tripEmptyComponent, this.#tripContainer);
+  }
+
+  #renderTripList() {
+    render(this.#tripListComponent, this.#tripContainer);
+    this.#renderEvents();
+  }
+
   #renderTrip() {
-    if (this.#tripEvents.length === 0) {
-      render(new TripListEmptyView, this.#tripContainer);
-      return;
-    }
-    render(new SortView(), this.#tripListComponent.element);
     render(this.#tripListComponent, this.#tripContainer);
 
-    for (let i = 0; i < this.#tripEvents.length; i++) {
-      const event = this.#tripEvents[i];
-      const eventDestination = this.#destinations.find((destination) => destination.id === event.destination);
-      const eventOffers = this.#offers.find((offer) => offer.type === event.type).offers;
-
-      this.#renderEvent({
-        eventTrip: event,
-        destination: eventDestination,
-        offers: eventOffers
-      });
+    if (this.#tripEvents.length === 0) {
+      this.#renderTripEmpty();
+      return;
     }
+
+    this.#renderSort();
+    this.#renderTripList();
+
+
+    // for (let i = 0; i < this.#tripEvents.length; i++) {
+    //   const event = this.#tripEvents[i];
+    //   const eventDestination = this.#destinations.find((destination) => destination.id === event.destination);
+    //   const eventOffers = this.#offers.find((offer) => offer.type === event.type).offers;
+    //
+    //   this.#renderEvent({
+    //     eventTrip: event,
+    //     destination: eventDestination,
+    //     offers: eventOffers
+    //   });
+    // }
   }
 }
