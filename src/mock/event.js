@@ -8,6 +8,7 @@ import {
   MIN_NUMBER,
   OFFERS,
 } from '../const';
+import {getDate} from '../utils/events';
 
 function generateMockOffers() {
   return {
@@ -33,8 +34,8 @@ function getRandomMockDestination() {
 function generateEvents(type, destinationId, offerIds) {
   return {
     id: crypto.randomUUID(),
-    dateFrom: new Date(2023, 4, 18, 10, 20),
-    dateTo: new Date(2023,4, 18, 20, 0),
+    dateFrom: getDate().from,
+    dateTo: getDate().to,
     basePrice: getRandomNumber(MIN_NUMBER, MAX_NUMBER),
     offers: offerIds,
     destination: destinationId,
