@@ -4,6 +4,7 @@ import SortView from '../view/sort-view';
 import TripListEmptyView from '../view/trip-list-empty-view';
 import EventPresenter from './event-presenter';
 import TripInfoView from '../view/trip-info-view';
+import {updateItem} from '../utils/common';
 
 export default class TripPresenter {
   #tripContainer = null;
@@ -33,6 +34,11 @@ export default class TripPresenter {
 
     this.#renderTrip();
   }
+
+  #handleEventChange = (updatedEvent) => {
+    this.#tripEvents = updateItem(this.#tripEvents, updatedEvent);
+    this.#eventPresenters.get(updatedEvent.id).init(updatedEvent);
+  };
 
   #renderSort() {
     render(this.#sortComponent, this.#tripListComponent.element, RenderPosition.AFTERBEGIN);
