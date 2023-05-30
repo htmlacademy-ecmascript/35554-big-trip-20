@@ -18,6 +18,7 @@ export default class TripPresenter {
   #tripEvents = [];
   #destinations = [];
   #offers = [];
+  #eventPresenters = new Map();
 
   constructor({tripContainer, headerContainer, eventsModel}) {
     this.#tripContainer = tripContainer;
@@ -38,8 +39,12 @@ export default class TripPresenter {
   }
 
   #renderEvent({eventTrip, destination, offers}) {
-    const eventPresenter = new EventPresenter({eventListContainer: this.#tripListComponent.element});
+    const eventPresenter = new EventPresenter({
+      eventListContainer: this.#tripListComponent.element
+    });
+
     eventPresenter.init({eventTrip, destination, offers});
+    this.#eventPresenters.set(eventTrip.id, eventPresenter);
   }
 
   #renderEvents() {
@@ -52,6 +57,11 @@ export default class TripPresenter {
 
   #renderTripEmpty() {
     render(this.#tripEmptyComponent, this.#tripContainer);
+  }
+
+  #clearEventsList() {
+    this.#eventPresenters.forEach((presenter) =>presenter.destroy());
+    this.#eventPresenters.clear();
   }
 
   #renderTripList() {
