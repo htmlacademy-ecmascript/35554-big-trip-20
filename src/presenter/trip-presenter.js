@@ -1,25 +1,27 @@
-import {render, RenderPosition, replace} from '../framework/render';
+import {render, RenderPosition} from '../framework/render';
 import TripListView from '../view/trip-list-view';
 import SortView from '../view/sort-view';
 import TripListEmptyView from '../view/trip-list-empty-view';
-import EventView from '../view/event-view';
-import EventEditView from '../view/event-edit-view';
 import EventPresenter from './event-presenter';
+import TripInfoView from '../view/trip-info-view';
 
 export default class TripPresenter {
   #tripContainer = null;
+  #headerContainer = null;
   #eventsModel = null;
 
   #tripListComponent = new TripListView();
   #sortComponent = new SortView();
   #tripEmptyComponent = new TripListEmptyView();
+  #tripInfoComponent = null;
 
   #tripEvents = [];
   #destinations = [];
   #offers = [];
 
-  constructor({tripContainer, eventsModel}) {
+  constructor({tripContainer, headerContainer, eventsModel}) {
     this.#tripContainer = tripContainer;
+    this.#headerContainer = headerContainer;
     this.#eventsModel = eventsModel;
   }
 
@@ -38,47 +40,6 @@ export default class TripPresenter {
   #renderEvent({eventTrip, destination, offers}) {
     const eventPresenter = new EventPresenter({eventListContainer: this.#tripListComponent.element});
     eventPresenter.init({eventTrip, destination, offers});
-    // const escKeyDownHandler = (evt) => {
-    //   if (evt.key === 'Escape') {
-    //     evt.preventDefault();
-    //     replaceEditorToEvent();
-    //     document.removeEventListener('keydown', escKeyDownHandler);
-    //   }
-    // };
-    //
-    // const eventComponent = new EventView({
-    //   eventTrip,
-    //   destination,
-    //   offers,
-    //   onEditClick: () => {
-    //     replaceEventToEditor();
-    //     document.addEventListener('keydown', escKeyDownHandler);
-    //   }
-    // });
-    //
-    // const eventEditComponent = new EventEditView({
-    //   eventTrip,
-    //   destination,
-    //   offers,
-    //   onFormSubmit: () => {
-    //     replaceEditorToEvent();
-    //     document.removeEventListener('keydown', escKeyDownHandler);
-    //   },
-    //   onToggleClick: () => {
-    //     replaceEditorToEvent();
-    //     document.removeEventListener('keydown', escKeyDownHandler);
-    //   }
-    // });
-    //
-    // function replaceEventToEditor() {
-    //   replace(eventEditComponent, eventComponent);
-    // }
-    //
-    // function replaceEditorToEvent() {
-    //   replace(eventComponent, eventEditComponent);
-    // }
-    //
-    // render(eventComponent, this.#tripListComponent.element);
   }
 
   #renderEvents() {
@@ -98,6 +59,11 @@ export default class TripPresenter {
     this.#renderEvents();
   }
 
+  #renderTripInfo() {
+    this.#tripInfoComponent = new TripInfoView({eventsModel: this.#eventsModel});
+    render(this.#tripInfoComponent, this.#headerContainer, RenderPosition.AFTERBEGIN);
+  }
+
   #renderTrip() {
     render(this.#tripListComponent, this.#tripContainer);
 
@@ -108,18 +74,6 @@ export default class TripPresenter {
 
     this.#renderSort();
     this.#renderTripList();
-
-
-    // for (let i = 0; i < this.#tripEvents.length; i++) {
-    //   const event = this.#tripEvents[i];
-    //   const eventDestination = this.#destinations.find((destination) => destination.id === event.destination);
-    //   const eventOffers = this.#offers.find((offer) => offer.type === event.type).offers;
-    //
-    //   this.#renderEvent({
-    //     eventTrip: event,
-    //     destination: eventDestination,
-    //     offers: eventOffers
-    //   });
-    // }
+    this.#renderTripInfo();
   }
 }
