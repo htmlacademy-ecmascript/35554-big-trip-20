@@ -4,6 +4,7 @@ import SortView from '../view/sort-view';
 import TripListEmptyView from '../view/trip-list-empty-view';
 import EventView from '../view/event-view';
 import EventEditView from '../view/event-edit-view';
+import EventPresenter from './event-presenter';
 
 export default class TripPresenter {
   #tripContainer = null;
@@ -35,47 +36,49 @@ export default class TripPresenter {
   }
 
   #renderEvent({eventTrip, destination, offers}) {
-    const escKeyDownHandler = (evt) => {
-      if (evt.key === 'Escape') {
-        evt.preventDefault();
-        replaceEditorToEvent();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    };
-
-    const eventComponent = new EventView({
-      eventTrip,
-      destination,
-      offers,
-      onEditClick: () => {
-        replaceEventToEditor();
-        document.addEventListener('keydown', escKeyDownHandler);
-      }
-    });
-
-    const eventEditComponent = new EventEditView({
-      eventTrip,
-      destination,
-      offers,
-      onFormSubmit: () => {
-        replaceEditorToEvent();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      },
-      onToggleClick: () => {
-        replaceEditorToEvent();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    });
-
-    function replaceEventToEditor() {
-      replace(eventEditComponent, eventComponent);
-    }
-
-    function replaceEditorToEvent() {
-      replace(eventComponent, eventEditComponent);
-    }
-
-    render(eventComponent, this.#tripListComponent.element);
+    const eventPresenter = new EventPresenter({eventListContainer: this.#tripListComponent.element});
+    eventPresenter.init({eventTrip, destination, offers});
+    // const escKeyDownHandler = (evt) => {
+    //   if (evt.key === 'Escape') {
+    //     evt.preventDefault();
+    //     replaceEditorToEvent();
+    //     document.removeEventListener('keydown', escKeyDownHandler);
+    //   }
+    // };
+    //
+    // const eventComponent = new EventView({
+    //   eventTrip,
+    //   destination,
+    //   offers,
+    //   onEditClick: () => {
+    //     replaceEventToEditor();
+    //     document.addEventListener('keydown', escKeyDownHandler);
+    //   }
+    // });
+    //
+    // const eventEditComponent = new EventEditView({
+    //   eventTrip,
+    //   destination,
+    //   offers,
+    //   onFormSubmit: () => {
+    //     replaceEditorToEvent();
+    //     document.removeEventListener('keydown', escKeyDownHandler);
+    //   },
+    //   onToggleClick: () => {
+    //     replaceEditorToEvent();
+    //     document.removeEventListener('keydown', escKeyDownHandler);
+    //   }
+    // });
+    //
+    // function replaceEventToEditor() {
+    //   replace(eventEditComponent, eventComponent);
+    // }
+    //
+    // function replaceEditorToEvent() {
+    //   replace(eventComponent, eventEditComponent);
+    // }
+    //
+    // render(eventComponent, this.#tripListComponent.element);
   }
 
   #renderEvents() {
