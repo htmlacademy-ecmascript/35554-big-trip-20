@@ -4,6 +4,7 @@ import EventEditView from '../view/event-edit-view';
 
 export default class EventPresenter {
   #eventListContainer = null;
+  #handleDataChange = null;
 
   #eventComponent = null;
   #eventEditComponent = null;
@@ -12,14 +13,15 @@ export default class EventPresenter {
   #destination = null;
   #offers = null;
 
-  constructor({eventListContainer}) {
+  constructor({eventListContainer, onDataChange, destination, offers}) {
     this.#eventListContainer = eventListContainer;
-  }
-
-  init({eventTrip, destination, offers}) {
-    this.#eventTrip = eventTrip;
+    this.#handleDataChange = onDataChange;
     this.#destination = destination;
     this.#offers = offers;
+  }
+
+  init(eventTrip) {
+    this.#eventTrip = eventTrip;
 
     const prevEventComponent = this.#eventComponent;
     const prevEventEditComponent = this.#eventEditComponent;
@@ -28,7 +30,8 @@ export default class EventPresenter {
       eventTrip: this.#eventTrip,
       destination: this.#destination,
       offers: this.#offers,
-      onEditClick: this.#handleEditClick
+      onEditClick: this.#handleEditClick,
+      onFavoriteClick: this.#handleFavoriteClick
     });
     this.#eventEditComponent = new EventEditView({
       eventTrip: this.#eventTrip,
@@ -70,16 +73,27 @@ export default class EventPresenter {
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
-  #escKeyDownHandler(evt) {
+  #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
       this.#replaceEditorToEvent();
     }
-  }
+  };
 
-  #handleEditClick = () => this.#replaceEventToEditor();
+  #handleEditClick = () => {
+    this.#replaceEventToEditor();
+  };
 
-  #handleFormSubmit = () => this.#replaceEditorToEvent();
+  #handleToggleClick = () => {
+    this.#replaceEditorToEvent();
+  };
 
-  #handleToggleClick = () => this.#replaceEditorToEvent();
+  #handleFavoriteClick = () => {
+    this.#handleDataChange({...this.#eventTrip, isFavorite: !this.#eventTrip.isFavorite});
+  };
+
+  #handleFormSubmit = (eventTrip) => {
+    this.#handleDataChange(eventTrip);
+    this.#replaceEditorToEvent();
+  };
 }

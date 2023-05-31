@@ -102,7 +102,7 @@ function createEventEditTemplate(eventTrip, destination, offers) {
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">Cancel</button>
+          <button class="event__reset-btn" type="reset">Delete</button>
           <button class="event__rollup-btn" type="button">
             <span class="visually-hidden">Open event</span>
           </button>
@@ -156,13 +156,13 @@ export default class EventEditView extends AbstractView {
     return createEventEditTemplate(this.#eventTrip, this.#destination, this.#offers);
   }
 
-  #formSubmitHandler = (evt) => {
-    evt.preventDefault();
-    this.#handleFormSubmit();
-  };
-
   #toggleClickHandler = (evt) => {
     evt.preventDefault();
     this.#handleToggleClick();
+  };
+
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormSubmit(this.#eventTrip);
   };
 }

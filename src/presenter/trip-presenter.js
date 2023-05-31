@@ -46,18 +46,20 @@ export default class TripPresenter {
 
   #renderEvent({eventTrip, destination, offers}) {
     const eventPresenter = new EventPresenter({
-      eventListContainer: this.#tripListComponent.element
+      eventListContainer: this.#tripListComponent.element,
+      onDataChange: this.#handleEventChange,
+      destination, offers
     });
 
-    eventPresenter.init({eventTrip, destination, offers});
+    eventPresenter.init(eventTrip);
     this.#eventPresenters.set(eventTrip.id, eventPresenter);
   }
 
   #renderEvents() {
-    this.#tripEvents.forEach((event) => this.#renderEvent({
-      eventTrip: event,
-      destination: this.#destinations.find((destination) => destination.id === event.destination),
-      offers: this.#offers.find((offer) => offer.type === event.type).offers
+    this.#tripEvents.forEach((eventTrip) => this.#renderEvent({
+      eventTrip,
+      destination: this.#destinations.find((destination) => destination.id === eventTrip.destination),
+      offers: this.#offers.find((offer) => offer.type === eventTrip.type).offers
     }));
   }
 
