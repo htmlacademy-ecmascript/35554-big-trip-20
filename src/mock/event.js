@@ -9,12 +9,13 @@ import {
   OFFERS,
 } from '../const';
 import {getDate} from '../utils/events';
+import {nanoid} from 'nanoid';
 
 function generateMockOffers() {
   return {
     id: crypto.randomUUID(),
     title: getRandomArrayElement(OFFERS),
-    price: getRandomNumber(MIN_NUMBER, MAX_NUMBER / 10),
+    price: Math.ceil((getRandomNumber(MIN_NUMBER, MAX_NUMBER / 10) / 10)) * 10,
   };
 }
 
@@ -33,13 +34,13 @@ function getRandomMockDestination() {
 
 function generateEvents(type, destinationId, offerIds) {
   return {
-    id: crypto.randomUUID(),
+    id: nanoid(),
     dateFrom: getDate().from,
     dateTo: getDate().to,
-    basePrice: getRandomNumber(MIN_NUMBER, MAX_NUMBER),
+    basePrice: Math.ceil(getRandomNumber(MIN_NUMBER, MAX_NUMBER) / 10) * 10,
     offers: offerIds,
     destination: destinationId,
-    isFavorite: getRandomNumber(0,1),
+    isFavorite: !getRandomNumber(0,1),
     type,
   };
 }

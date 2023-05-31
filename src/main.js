@@ -1,5 +1,5 @@
 import TripPresenter from './presenter/trip-presenter';
-import HeaderPresenter from './presenter/header-presenter';
+import FilterPresenter from './presenter/filter-presenter';
 import EventsModel from './model/events-model';
 import {generateFilter} from './mock/filters';
 
@@ -10,11 +10,12 @@ const filters = generateFilter(eventsModel.events);
 
 const tripPresenter = new TripPresenter({
   tripContainer: tripEventsElement,
+  headerContainer: siteTripMainElement,
   eventsModel,
 });
 
-const headerPresenter = new HeaderPresenter({container: siteTripMainElement, filters});
+const filterPresenter = new FilterPresenter({filters});
 
-headerPresenter.init();
+filterPresenter.init();
 tripPresenter.init();
 

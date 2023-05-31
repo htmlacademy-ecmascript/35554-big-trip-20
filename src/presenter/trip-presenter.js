@@ -1,21 +1,29 @@
-import {render, replace} from '../framework/render';
+import {render, RenderPosition} from '../framework/render';
 import TripListView from '../view/trip-list-view';
 import SortView from '../view/sort-view';
 import TripListEmptyView from '../view/trip-list-empty-view';
-import EventView from '../view/event-view';
-import EventEditView from '../view/event-edit-view';
+import EventPresenter from './event-presenter';
+import TripInfoView from '../view/trip-info-view';
+import {updateItem} from '../utils/common';
 
 export default class TripPresenter {
   #tripContainer = null;
+  #headerContainer = null;
   #eventsModel = null;
 
   #tripListComponent = new TripListView();
+  #sortComponent = new SortView();
+  #tripEmptyComponent = new TripListEmptyView();
+  #tripInfoComponent = null;
+
   #tripEvents = [];
   #destinations = [];
   #offers = [];
+  #eventPresenters = new Map();
 
-  constructor({tripContainer, eventsModel}) {
+  constructor({tripContainer, headerContainer, eventsModel}) {
     this.#tripContainer = tripContainer;
+    this.#headerContainer = headerContainer;
     this.#eventsModel = eventsModel;
   }
 
@@ -27,68 +35,68 @@ export default class TripPresenter {
     this.#renderTrip();
   }
 
+  #handleModeChange = () => {
+    this.#eventPresenters.forEach((presenter) => presenter.resetView());
+  };
+
+  #handleEventChange = (updatedEvent) => {
+    this.#tripEvents = updateItem(this.#tripEvents, updatedEvent);
+    this.#eventPresenters.get(updatedEvent.id).init(updatedEvent);
+  };
+
+  #renderSort() {
+    render(this.#sortComponent, this.#tripListComponent.element, RenderPosition.AFTERBEGIN);
+  }
+
   #renderEvent({eventTrip, destination, offers}) {
-    const escKeyDownHandler = (evt) => {
-      if (evt.key === 'Escape') {
-        evt.preventDefault();
-        replaceEditorToEvent();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    };
-
-    const eventComponent = new EventView({
-      eventTrip,
-      destination,
-      offers,
-      onEditClick: () => {
-        replaceEventToEditor();
-        document.addEventListener('keydown', escKeyDownHandler);
-      }
+    const eventPresenter = new EventPresenter({
+      eventListContainer: this.#tripListComponent.element,
+      onDataChange: this.#handleEventChange,
+      onModeChange: this.#handleModeChange,
+      destination, offers
     });
 
-    const eventEditComponent = new EventEditView({
+    eventPresenter.init(eventTrip);
+    this.#eventPresenters.set(eventTrip.id, eventPresenter);
+  }
+
+  #renderEvents() {
+    this.#tripEvents.forEach((eventTrip) => this.#renderEvent({
       eventTrip,
-      destination,
-      offers,
-      onFormSubmit: () => {
-        replaceEditorToEvent();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      },
-      onToggleClick: () => {
-        replaceEditorToEvent();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    });
+      destination: this.#destinations.find((destination) => destination.id === eventTrip.destination),
+      offers: this.#offers.find((offer) => offer.type === eventTrip.type).offers
+    }));
+  }
 
-    function replaceEventToEditor() {
-      replace(eventEditComponent, eventComponent);
-    }
+  #renderTripEmpty() {
+    render(this.#tripEmptyComponent, this.#tripContainer);
+  }
 
-    function replaceEditorToEvent() {
-      replace(eventComponent, eventEditComponent);
-    }
+  #clearEventsList() {
+    this.#eventPresenters.forEach((presenter) =>presenter.destroy());
+    this.#eventPresenters.clear();
+  }
 
-    render(eventComponent, this.#tripListComponent.element);
+  #renderTripList() {
+    render(this.#tripListComponent, this.#tripContainer);
+    this.#renderEvents();
+  }
+
+  #renderTripInfo() {
+    this.#tripInfoComponent = new TripInfoView({eventsModel: this.#eventsModel});
+    render(this.#tripInfoComponent, this.#headerContainer, RenderPosition.AFTERBEGIN);
   }
 
   #renderTrip() {
-    if (this.#tripEvents.length === 0) {
-      render(new TripListEmptyView, this.#tripContainer);
-      return;
-    }
-    render(new SortView(), this.#tripListComponent.element);
     render(this.#tripListComponent, this.#tripContainer);
 
-    for (let i = 0; i < this.#tripEvents.length; i++) {
-      const event = this.#tripEvents[i];
-      const eventDestination = this.#destinations.find((destination) => destination.id === event.destination);
-      const eventOffers = this.#offers.find((offer) => offer.type === event.type).offers;
-
-      this.#renderEvent({
-        eventTrip: event,
-        destination: eventDestination,
-        offers: eventOffers
-      });
+    if (this.#tripEvents.length === 0) {
+      this.#renderTripEmpty();
+      return;
     }
+
+    this.#renderSort();
+    this.#renderTripList();
+    this.#renderTripInfo();
   }
 }
