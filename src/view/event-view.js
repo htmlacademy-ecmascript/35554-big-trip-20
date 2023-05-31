@@ -17,7 +17,6 @@ function createEventOffersTemplate(offers) {
 
 function createEventTemplate(eventTrip, destination, offers) {
   const {basePrice, dateFrom, dateTo, type, isFavorite} = eventTrip;
-  console.log(eventTrip);
 
   const date = getRefineEventDateTime(dateFrom);
   const dateShort = getRefineEventDateShort(dateFrom);
