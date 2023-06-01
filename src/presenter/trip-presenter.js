@@ -5,6 +5,8 @@ import TripListEmptyView from '../view/trip-list-empty-view';
 import EventPresenter from './event-presenter';
 import TripInfoView from '../view/trip-info-view';
 import {updateItem} from '../utils/common';
+import {SortType} from '../const';
+import {sortByDay, sortByPrice, sortByTime} from '../utils/events';
 
 export default class TripPresenter {
   #tripContainer = null;
@@ -12,7 +14,7 @@ export default class TripPresenter {
   #eventsModel = null;
 
   #tripListComponent = new TripListView();
-  #sortComponent = new SortView();
+  #sortComponent = null;
   #tripEmptyComponent = new TripListEmptyView();
   #tripInfoComponent = null;
 
@@ -20,6 +22,7 @@ export default class TripPresenter {
   #destinations = [];
   #offers = [];
   #eventPresenters = new Map();
+  #currentSortType = SortType.DAY;
 
   constructor({tripContainer, headerContainer, eventsModel}) {
     this.#tripContainer = tripContainer;
@@ -44,7 +47,33 @@ export default class TripPresenter {
     this.#eventPresenters.get(updatedEvent.id).init(updatedEvent);
   };
 
+  #sortEvents(sortType) {
+    switch (sortType) {
+      case SortType.DAY:
+        this.#tripEvents.sort(sortByDay);
+        break;
+      case SortType.TIME:
+        this.#tripEvents.sort(sortByTime);
+        break;
+      case SortType.PRICE:
+        this.#tripEvents.sort(sortByPrice);
+        break;
+    }
+    this.#currentSortType = sortType;
+  }
+
+  #handleSortTypeChange = (sortType) => {
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+
+    this.#sortEvents(sortType);
+  };
+
   #renderSort() {
+    this.#sortComponent = new SortView({
+      onSortTypeChange: this.#handleSortTypeChange
+    });
     render(this.#sortComponent, this.#tripListComponent.element, RenderPosition.AFTERBEGIN);
   }
 

@@ -86,6 +86,26 @@ function isEventPast(dataTo) {
   return dayjs(dataTo).isBefore((dayjs()));
 }
 
+function sortByDay(eventA, eventB) {
+  if (dayjs(eventA.dateFrom).isAfter(dayjs(eventB.dateFrom))) {
+    return 1;
+  }
+  if (dayjs(eventA.dateFrom) === dayjs(eventB.dateFrom)) {
+    return 0;
+  }
+  if (dayjs(eventA.dateFrom).isBefore(dayjs(eventB.dateFrom))) {
+    return -1;
+  }
+}
+
+function sortByTime(eventA, eventB) {
+  return dayjs(eventB.dateTo).diff(dayjs(eventB.dateFrom)) - dayjs(eventA.dateTo).diff(dayjs(eventA.dateFrom));
+}
+
+function sortByPrice(eventA, eventB) {
+  return eventB.basePrice - eventA.basePrice;
+}
+
 export {
   getRefineEventDateShort,
   getRefineTimeDate,
@@ -95,5 +115,8 @@ export {
   getDate,
   isEventFuture,
   isEventPast,
-  isEventPresent
+  isEventPresent,
+  sortByDay,
+  sortByTime,
+  sortByPrice
 };
