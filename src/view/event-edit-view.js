@@ -1,6 +1,6 @@
-import AbstractView from '../framework/view/abstract-view';
 import {CITIES, EVENT_EMPTY, WAYPOINTS} from '../const';
 import {getRefineFullDate} from '../utils/events';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 
 function createEventEditTypeTemplate(currentType) {
   return WAYPOINTS.map((type) => `
@@ -20,11 +20,12 @@ function createDestinationCitiesTemplate() {
   return CITIES.map((element) => `<option value="${element}"></option>`).join('');
 }
 
-function createOffersTemplate(offers) {
+function createOffersTemplate(event, offers) {
+  const isChecked = (offer) => event.offers.includes(offer.id) ? 'checked' : '';
   return offers.map((offer) => `
     <div class="event__offer-selector">
       <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1"
-      type="checkbox" name="event-offer-luggage" checked/>
+      type="checkbox" name="event-offer-luggage" ${isChecked(offer)}/>
       <label class="event__offer-label" for="event-offer-luggage-1">
         <span class="event__offer-title">${offer.title}</span>
         &plus;&euro;&nbsp;
@@ -33,23 +34,18 @@ function createOffersTemplate(offers) {
     </div>`).join('');
 }
 
-function hasOffers(offers) {
-  return offers.length > 0
-    ? '<h3 class="event__section-title  event__section-title--offers">Offers</h3>'
-    : '';
-}
-
 function createPicturesDestinationTemplate(destination) {
   return destination.pictures.map((picture) => `
     <img class="event__photo" src="${picture.src}" alt="${picture.description}"/>`).join('');
 }
 
 function createEventEditTemplate(eventTrip, destination, offers) {
-  const {basePrice, type, dateFrom, dateTo} = eventTrip;
+  console.log(eventTrip, offers);
+  const {basePrice, type, dateFrom, dateTo, hasOffers} = eventTrip;
   const dateFullFrom = getRefineFullDate(dateFrom);
   const dateFullTo = getRefineFullDate(dateTo);
   const citiesTemplate = createDestinationCitiesTemplate();
-  const offersList = createOffersTemplate(offers);
+  const offersList = createOffersTemplate(eventTrip, offers);
   const picturesList = createPicturesDestinationTemplate(destination);
 
   return (
@@ -108,13 +104,12 @@ function createEventEditTemplate(eventTrip, destination, offers) {
           </button>
         </header>
         <section class="event__details">
-          <section class="event__section  event__section--offers">
-            ${hasOffers(offers)}
-
+          ${hasOffers ? `<section class="event__section  event__section--offers">
+            <h3 class="event__section-title  event__section-title--offers">Offers</h3>
             <div class="event__available-offers">
             ${offersList}
             </div>
-          </section>
+          </section>` : ''}
 
           <section class="event__section  event__section--destination">
             <h3 class="event__section-title  event__section-title--destination">Destination</h3>
@@ -132,8 +127,7 @@ function createEventEditTemplate(eventTrip, destination, offers) {
   );
 }
 
-export default class EventEditView extends AbstractView {
-  #eventTrip = null;
+export default class EventEditView extends AbstractStatefulView {
   #destination = null;
   #offers = null;
   #handleFormSubmit = null;
@@ -141,7 +135,7 @@ export default class EventEditView extends AbstractView {
 
   constructor({eventTrip = EVENT_EMPTY, destination, offers, onFormSubmit, onToggleClick}) {
     super();
-    this.#eventTrip = eventTrip;
+    this._setState(EventEditView.parseEventToState(eventTrip));
     this.#destination = destination;
     this.#offers = offers;
     this.#handleFormSubmit = onFormSubmit;
@@ -153,7 +147,7 @@ export default class EventEditView extends AbstractView {
   }
 
   get template() {
-    return createEventEditTemplate(this.#eventTrip, this.#destination, this.#offers);
+    return createEventEditTemplate(this._state, this.#destination, this.#offers);
   }
 
   #toggleClickHandler = (evt) => {
@@ -163,6 +157,24 @@ export default class EventEditView extends AbstractView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit(this.#eventTrip);
+    this.#handleFormSubmit(EventEditView.parseStateToEvent(this._state));
   };
+
+  static parseEventToState(event) {
+    return {...event,
+      hasOffers: event.offers.length !== null,
+    };
+  }
+
+  static parseStateToEvent(state) {
+    const event = {...state};
+
+    if (!event.hasOffers) {
+      event.offers.length = null;
+    }
+
+    delete event.hasOffers;
+
+    return event;
+  }
 }
