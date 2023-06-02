@@ -144,6 +144,11 @@ export default class EventEditView extends AbstractStatefulView {
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__rollup-btn')
       .addEventListener('click', this.#toggleClickHandler);
+    this.element.querySelectorAll('.event__type-input')
+      .forEach((input) => input
+        .addEventListener('change', this.#typeEventClickHandler));
+    this.element.querySelector('.event__input--destination')
+      .addEventListener('change', this.#cityChangeHandler);
   }
 
   get template() {
@@ -158,6 +163,20 @@ export default class EventEditView extends AbstractStatefulView {
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
     this.#handleFormSubmit(EventEditView.parseStateToEvent(this._state));
+  };
+
+  #typeEventClickHandler = (evt) => {
+    evt.preventDefault();
+    this.updateElement({
+      type: evt.target.value,
+    });
+  };
+
+  #cityChangeHandler = (evt) => {
+    evt.preventDefault();
+    this.updateElement({
+      name: evt.target.value,
+    });
   };
 
   static parseEventToState(event) {
