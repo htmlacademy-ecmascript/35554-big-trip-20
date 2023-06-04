@@ -79,12 +79,12 @@ export default class TripPresenter {
     render(this.#sortComponent, this.#tripListComponent.element, RenderPosition.AFTERBEGIN);
   }
 
-  #renderEvent({eventTrip, destination, offers}) {
+  #renderEvent({eventTrip, destination, destinations, offers}) {
     const eventPresenter = new EventPresenter({
       eventListContainer: this.#tripListComponent.element,
       onDataChange: this.#handleEventChange,
       onModeChange: this.#handleModeChange,
-      destination, offers
+      destination, destinations, offers
     });
 
     eventPresenter.init(eventTrip);
@@ -94,8 +94,9 @@ export default class TripPresenter {
   #renderEvents() {
     this.#tripEvents.forEach((eventTrip) => this.#renderEvent({
       eventTrip,
+      destinations: this.#destinations,
       destination: this.#destinations.find((destination) => destination.id === eventTrip.destination),
-      offers: this.#offers.find((offer) => offer.type === eventTrip.type).offers
+      offers: this.#offers
     }));
   }
 

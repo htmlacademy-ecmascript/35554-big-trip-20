@@ -8,7 +8,7 @@ function createFilterItemTemplate(filters, isChecked) {
     type="radio" name="trip-filter" value="${filter.type}
     ${isChecked ? 'checked' : ''}
     ${filter.count === 0 ? 'disabled' : ''}">
-    <label class="trip-filters__filter-label" for="filter-${filter.type}">${filter.type} ${filter.count}</label>
+    <label class="trip-filters__filter-label" for="filter-${filter.type}">${filter.type}</label>
   </div>`).join('');
 }
 
