@@ -17,6 +17,7 @@ function createEventOffersTemplate(offers) {
 
 function createEventTemplate(eventTrip, destination, offers) {
   const {basePrice, dateFrom, dateTo, type, isFavorite} = eventTrip;
+  const currentOffers = offers.find((element) => element.type === type).offers;
 
   const date = getRefineEventDateTime(dateFrom);
   const dateShort = getRefineEventDateShort(dateFrom);
@@ -49,7 +50,7 @@ function createEventTemplate(eventTrip, destination, offers) {
          </p>
          <h4 class="visually-hidden">Offers:</h4>
          <ul class="event__selected-offers">
-         ${createEventOffersTemplate(offers)}
+         ${createEventOffersTemplate(currentOffers)}
 
          </ul>
          <button class="${favoriteClassName}" type="button">
