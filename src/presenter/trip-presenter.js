@@ -155,10 +155,10 @@ export default class TripPresenter {
     render(this.#tripEmptyComponent, this.#tripContainer);
   }
 
-  #clearEventsList() {
-    this.#eventPresenters.forEach((presenter) =>presenter.destroy());
-    this.#eventPresenters.clear();
-  }
+  // #clearEventsList() {
+  //   this.#eventPresenters.forEach((presenter) =>presenter.destroy());
+  //   this.#eventPresenters.clear();
+  // }
 
   #renderTripList() {
     const events = this.events;

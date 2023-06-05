@@ -141,10 +141,11 @@ export default class EventEditView extends AbstractStatefulView {
   #handleFormSubmit = null;
   #handleToggleClick = null;
   #handleDeleteClick = null;
+  #handleCancelClick = null;
   #datepickerFrom = null;
   #datepickerTo = null;
 
-  constructor({eventTrip = EVENT_EMPTY, destinations, offers, onFormSubmit, onToggleClick, onDeleteClick}) {
+  constructor({eventTrip = EVENT_EMPTY, destinations, offers, onFormSubmit, onToggleClick, onDeleteClick, onCanselClick}) {
     super();
     this._setState(EventEditView.parseEventToState({eventTrip}));
     this.#destinations = destinations;
@@ -152,6 +153,7 @@ export default class EventEditView extends AbstractStatefulView {
     this.#handleFormSubmit = onFormSubmit;
     this.#handleToggleClick = onToggleClick;
     this.#handleDeleteClick = onDeleteClick;
+    this.#handleCancelClick = onCanselClick;
 
     this._restoreHandlers();
   }
@@ -186,7 +188,7 @@ export default class EventEditView extends AbstractStatefulView {
     this.element.querySelector('.event__rollup-btn')
       .addEventListener('click', this.#toggleClickHandler);
     this.element.querySelector('.event__reset-btn')
-      .addEventListener('click', this.#deleteClickHandler);
+      .addEventListener('click', this.#canselClickHandler);
     this.element.querySelector('.event__type-group')
       .addEventListener('change', this.#typeEventClickHandler);
     this.element.querySelector('.event__input--destination')
@@ -204,9 +206,14 @@ export default class EventEditView extends AbstractStatefulView {
     this.#handleToggleClick();
   };
 
+  #canselClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleCancelClick();
+  };
+
   #deleteClickHandler = (evt) => {
     evt.preventDefault();
-    this.#handleDeleteClick();
+    this.#handleDeleteClick(EventEditView.parseStateToEvent(this._state));
   };
 
   #formSubmitHandler = (evt) => {

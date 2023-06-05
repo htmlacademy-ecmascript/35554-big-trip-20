@@ -49,6 +49,7 @@ export default class EventPresenter {
       onFormSubmit: this.#handleFormSubmit,
       onToggleClick: this.#handleToggleClick,
       onDeleteClick: this.#handleDeleteClick,
+      onCanselClick: this.#handleCanselClick,
     });
 
     if (prevEventComponent === null || prevEventEditComponent === null) {
@@ -110,9 +111,17 @@ export default class EventPresenter {
     this.#replaceEditorToEvent();
   };
 
-  #handleDeleteClick = () => {
+  #handleCanselClick = () => {
     this.#eventEditComponent.reset(this.#eventTrip);
     this.#replaceEditorToEvent();
+  };
+
+  #handleDeleteClick = (event) => {
+    this.#handleDataChange(
+      UserAction.DELETE_EVENT,
+      UpdateType.MINOR,
+      event
+    );
   };
 
   #handleFavoriteClick = () => {
