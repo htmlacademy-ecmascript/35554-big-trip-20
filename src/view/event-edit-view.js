@@ -42,7 +42,7 @@ function createPicturesDestinationTemplate(destination) {
   }
 }
 
-function createEventEditTemplate(state, destinations, offers) {
+function createEventEditTemplate({state, destinations, offers}) {
   const {eventTrip} = state;
   const {basePrice, type, dateFrom, dateTo} = eventTrip;
   const dateFullFrom = getRefineFullDate(dateFrom);
@@ -153,7 +153,11 @@ export default class EventEditView extends AbstractStatefulView {
   }
 
   get template() {
-    return createEventEditTemplate(this._state, this.#destinations, this.#offers);
+    return createEventEditTemplate({
+      state: this._state,
+      destinations: this.#destinations,
+      offers: this.#offers
+    });
   }
 
   reset = (event) => this.updateElement({event});
