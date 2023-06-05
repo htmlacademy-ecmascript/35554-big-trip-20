@@ -51,7 +51,6 @@ function createEventEditTemplate({state, destinations, offers}) {
   const currentOffers = offers.find((element) => element.type === type).offers;
   const offersList = createOffersTemplate(eventTrip, currentOffers);
   const destination = destinations.find((element) => element.id === eventTrip.destination);
-  console.log(currentOffers);
   const picturesList = createPicturesDestinationTemplate(destination);
 
   return (
