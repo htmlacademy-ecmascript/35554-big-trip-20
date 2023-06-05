@@ -264,17 +264,17 @@ export default class EventEditView extends AbstractStatefulView {
     this._setState({
       eventTrip: {
         ...this._state.eventTrip,
-        dateFrom: getRefineFullDate(userDate)
+        dateFrom: userDate
       },
     });
     this.#datepickerTo.set('minDate', this._state.eventTrip.dateFrom);
   };
 
   #dateToChangeHandler = ([userDate]) => {
-    this.updateElement({
+    this._setState({
       eventTrip: {
         ...this._state.eventTrip,
-        dateTo: getRefineFullDate(userDate)
+        dateTo: userDate
       },
     });
 
@@ -286,10 +286,10 @@ export default class EventEditView extends AbstractStatefulView {
     this.#datepickerFrom = flatpickr(
       dateFrom,
       {
-        dateFormat: 'Y-m-d H:i',
-        defaultDate: this._state.eventTrip.dateFrom,
-        onChange: this.#dateFromChangeHandler,
-        maxDate: this._state.eventTrip.dateTo,
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._state.dateFrom,
+        onClose: this.#dateFromChangeHandler,
+        maxDate: this._state.dateTo,
         enableTime: true,
         'time_24hr': true,
       },
@@ -298,11 +298,11 @@ export default class EventEditView extends AbstractStatefulView {
     this.#datepickerTo = flatpickr(
       dateTo,
       {
-        dateFormat: 'Y-m-d H:i',
-        defaultDate: this._state.eventTrip.dateTo,
-        onChange: this.#dateToChangeHandler,
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._state.dateTo,
+        onClose: this.#dateToChangeHandler,
         enableTime: true,
-        minDate: this._state.eventTrip.dateFrom,
+        minDate: this._state.dateFrom,
         'time_24hr': true,
       },
     );
