@@ -28,6 +28,8 @@ export default class TripPresenter {
     this.#tripContainer = tripContainer;
     this.#headerContainer = headerContainer;
     this.#eventsModel = eventsModel;
+
+    this.#eventsModel.addObserver(this.handleModelEvent);
   }
 
   get events() {
@@ -62,10 +64,18 @@ export default class TripPresenter {
     this.#eventPresenters.forEach((presenter) => presenter.resetView());
   };
 
-  #handleEventChange = (updatedEvent) => {
-    // this.#tripEvents = updateItem(this.#tripEvents, updatedEvent);
-    this.#eventPresenters.get(updatedEvent.id).init(updatedEvent);
+  #handleViewAction = (actionType, updateType, update) => {
+    console.log(actionType, updateType, update);
   };
+
+  #handleModelEvent = (updateType, data) => {
+    console.log(updateType, data);
+  };
+
+  // #handleEventChange = (updatedEvent) => {
+  //   // this.#tripEvents = updateItem(this.#tripEvents, updatedEvent);
+  //   this.#eventPresenters.get(updatedEvent.id).init(updatedEvent);
+  // };
 
   // #sortEvents(sortType) {
   //   switch (sortType) {
@@ -102,7 +112,7 @@ export default class TripPresenter {
   #renderEvent({eventTrip, destinations, offers}) {
     const eventPresenter = new EventPresenter({
       eventListContainer: this.#tripListComponent.element,
-      onDataChange: this.#handleEventChange,
+      onDataChange: this.#handleViewAction,
       onModeChange: this.#handleModeChange,
       destinations, offers
     });

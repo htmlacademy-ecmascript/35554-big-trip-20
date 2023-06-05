@@ -1,6 +1,7 @@
 import EventView from '../view/event-view';
 import {remove, render, replace} from '../framework/render';
 import EventEditView from '../view/event-edit-view';
+import {UpdateType, UserAction} from '../const';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -115,11 +116,19 @@ export default class EventPresenter {
   };
 
   #handleFavoriteClick = () => {
-    this.#handleDataChange({...this.#eventTrip, isFavorite: !this.#eventTrip.isFavorite});
+    this.#handleDataChange(
+      UserAction.UPDATE_EVENT,
+      UpdateType.MINOR,
+      {...this.#eventTrip, isFavorite: !this.#eventTrip.isFavorite}
+    );
   };
 
   #handleFormSubmit = (eventTrip) => {
-    this.#handleDataChange(eventTrip);
+    this.#handleDataChange(
+      UserAction.UPDATE_EVENT,
+      UpdateType.MINOR,
+      eventTrip,
+    );
     this.#replaceEditorToEvent();
   };
 }
