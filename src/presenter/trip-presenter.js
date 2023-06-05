@@ -4,7 +4,7 @@ import SortView from '../view/sort-view';
 import TripListEmptyView from '../view/trip-list-empty-view';
 import EventPresenter from './event-presenter';
 import TripInfoView from '../view/trip-info-view';
-import {updateItem} from '../utils/common';
+// import {updateItem} from '../utils/common';
 import {SortType} from '../const';
 import {sortByDay, sortByPrice, sortByTime} from '../utils/events';
 
@@ -18,9 +18,9 @@ export default class TripPresenter {
   #tripEmptyComponent = new TripListEmptyView();
   #tripInfoComponent = null;
 
-  #tripEvents = [];
-  #destinations = [];
-  #offers = [];
+  // #tripEvents = [];
+  // #destinations = [];
+  // #offers = [];
   #eventPresenters = new Map();
   #currentSortType = SortType.DAY;
 
@@ -31,6 +31,14 @@ export default class TripPresenter {
   }
 
   get events() {
+    switch (this.#currentSortType) {
+      case SortType.DAY:
+        return [...this.#eventsModel.events].sort(sortByDay);
+      case SortType.TIME:
+        return [...this.#eventsModel.events].sort(sortByTime);
+      case SortType.PRICE:
+        return [...this.#eventsModel.events].sort(sortByPrice);
+    }
     return this.#eventsModel.events;
   }
 
@@ -43,9 +51,9 @@ export default class TripPresenter {
   }
 
   init() {
-    this.#tripEvents = [...this.#eventsModel.events];
-    this.#destinations = [...this.#eventsModel.destinations];
-    this.#offers = [...this.#eventsModel.offers];
+    // this.#tripEvents = [...this.#eventsModel.events];
+    // this.#destinations = [...this.#eventsModel.destinations];
+    // this.#offers = [...this.#eventsModel.offers];
 
     this.#renderTrip();
   }
@@ -55,31 +63,31 @@ export default class TripPresenter {
   };
 
   #handleEventChange = (updatedEvent) => {
-    this.#tripEvents = updateItem(this.#tripEvents, updatedEvent);
+    // this.#tripEvents = updateItem(this.#tripEvents, updatedEvent);
     this.#eventPresenters.get(updatedEvent.id).init(updatedEvent);
   };
 
-  #sortEvents(sortType) {
-    switch (sortType) {
-      case SortType.DAY:
-        this.#tripEvents.sort(sortByDay);
-        break;
-      case SortType.TIME:
-        this.#tripEvents.sort(sortByTime);
-        break;
-      case SortType.PRICE:
-        this.#tripEvents.sort(sortByPrice);
-        break;
-    }
-    this.#currentSortType = sortType;
-  }
+  // #sortEvents(sortType) {
+  //   switch (sortType) {
+  //     case SortType.DAY:
+  //       this.#tripEvents.sort(sortByDay);
+  //       break;
+  //     case SortType.TIME:
+  //       this.#tripEvents.sort(sortByTime);
+  //       break;
+  //     case SortType.PRICE:
+  //       this.#tripEvents.sort(sortByPrice);
+  //       break;
+  //   }
+  //   this.#currentSortType = sortType;
+  // }
 
   #handleSortTypeChange = (sortType) => {
     if (this.#currentSortType === sortType) {
       return;
     }
 
-    this.#sortEvents(sortType);
+    this.#currentSortType = sortType;
     this.#clearEventsList();
     this.#renderTripList();
   };
@@ -91,24 +99,23 @@ export default class TripPresenter {
     render(this.#sortComponent, this.#tripListComponent.element, RenderPosition.AFTERBEGIN);
   }
 
-  #renderEvent({eventTrip, destination, destinations, offers}) {
+  #renderEvent({eventTrip, destinations, offers}) {
     const eventPresenter = new EventPresenter({
       eventListContainer: this.#tripListComponent.element,
       onDataChange: this.#handleEventChange,
       onModeChange: this.#handleModeChange,
-      destination, destinations, offers
+      destinations, offers
     });
 
     eventPresenter.init(eventTrip);
     this.#eventPresenters.set(eventTrip.id, eventPresenter);
   }
 
-  #renderEvents() {
-    this.#tripEvents.forEach((eventTrip) => this.#renderEvent({
-      eventTrip,
-      destinations: this.#destinations,
-      destination: this.#destinations.find((destination) => destination.id === eventTrip.destination),
-      offers: this.#offers
+  #renderEvents(events, destinations, offers) {
+    events.forEach((event) => this.#renderEvent({
+      event,
+      destinations: destinations,
+      offers: offers
     }));
   }
 
@@ -122,8 +129,12 @@ export default class TripPresenter {
   }
 
   #renderTripList() {
+    const events = this.events;
+    const destinations = this.destinations;
+    const offers = this.offers;
+
     render(this.#tripListComponent, this.#tripContainer);
-    this.#renderEvents();
+    this.#renderEvents(events, destinations, offers);
   }
 
   #renderTripInfo() {
@@ -134,7 +145,7 @@ export default class TripPresenter {
   #renderTrip() {
     render(this.#tripListComponent, this.#tripContainer);
 
-    if (this.#tripEvents.length === 0) {
+    if (this.events.length === 0) {
       this.#renderTripEmpty();
       return;
     }

@@ -16,16 +16,14 @@ export default class EventPresenter {
   #eventEditComponent = null;
 
   #eventTrip = null;
-  #destination = null;
   #destinations = null;
   #offers = null;
   #mode = Mode.DEFAULT;
 
-  constructor({eventListContainer, onDataChange, onModeChange, destination, destinations, offers}) {
+  constructor({eventListContainer, onDataChange, onModeChange, destinations, offers}) {
     this.#eventListContainer = eventListContainer;
     this.#handleDataChange = onDataChange;
     this.#handleModeChange = onModeChange;
-    this.#destination = destination;
     this.#destinations = destinations;
     this.#offers = offers;
   }
@@ -38,7 +36,7 @@ export default class EventPresenter {
 
     this.#eventComponent = new EventView({
       eventTrip: this.#eventTrip,
-      destination: this.#destination,
+      destinations: this.#destinations,
       offers: this.#offers,
       onEditClick: this.#handleEditClick,
       onFavoriteClick: this.#handleFavoriteClick
