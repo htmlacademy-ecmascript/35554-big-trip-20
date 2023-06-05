@@ -1,4 +1,4 @@
-import {render, RenderPosition} from '../framework/render';
+import {remove, render, RenderPosition} from '../framework/render';
 import TripListView from '../view/trip-list-view';
 import SortView from '../view/sort-view';
 import TripListEmptyView from '../view/trip-list-empty-view';
@@ -167,6 +167,18 @@ export default class TripPresenter {
 
     render(this.#tripListComponent, this.#tripContainer);
     this.#renderEvents(events, destinations, offers);
+  }
+
+  #clearTrip({resetSortType = false} = {}) {
+    this.#eventPresenters.forEach((presenter) => presenter.destroy());
+    this.#eventPresenters.clear();
+
+    remove(this.#sortComponent);
+    remove(this.#tripEmptyComponent);
+
+    if (resetSortType) {
+      this.#currentSortType = SortType.DAY;
+    }
   }
 
   #renderTripInfo() {
