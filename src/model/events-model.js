@@ -5,10 +5,11 @@ import {
 } from '../mock/event';
 import {MAX_COUNT_DESCRIPTION, MAX_COUNT_OFFER, MIN_COUNT_OFFER, WAYPOINTS} from '../const';
 import {getRandomArrayElement, getRandomNumber} from '../utils/common';
+import Observable from '../framework/observable';
 
 const EVENT_COUNT = 4;
 
-export default class EventsModel {
+export default class EventsModel extends Observable {
   #events = null;
   #destinations = null;
   #offers = null;

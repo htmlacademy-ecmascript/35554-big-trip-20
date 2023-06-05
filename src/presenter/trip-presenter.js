@@ -30,6 +30,18 @@ export default class TripPresenter {
     this.#eventsModel = eventsModel;
   }
 
+  get events() {
+    return this.#eventsModel.events;
+  }
+
+  get destinations() {
+    return this.#eventsModel.destinations;
+  }
+
+  get offers() {
+    return this.#eventsModel.offers;
+  }
+
   init() {
     this.#tripEvents = [...this.#eventsModel.events];
     this.#destinations = [...this.#eventsModel.destinations];
