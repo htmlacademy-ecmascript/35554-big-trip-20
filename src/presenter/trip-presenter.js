@@ -5,7 +5,7 @@ import TripListEmptyView from '../view/trip-list-empty-view';
 import EventPresenter from './event-presenter';
 import TripInfoView from '../view/trip-info-view';
 // import {updateItem} from '../utils/common';
-import {SortType} from '../const';
+import {SortType, UpdateType, UserAction} from '../const';
 import {sortByDay, sortByPrice, sortByTime} from '../utils/events';
 
 export default class TripPresenter {
@@ -66,10 +66,32 @@ export default class TripPresenter {
 
   #handleViewAction = (actionType, updateType, update) => {
     console.log(actionType, updateType, update);
+    switch (actionType) {
+      case UserAction.UPDATE_EVENT:
+        this.#eventsModel.updateEvent(updateType, update);
+        break;
+      case UserAction.ADD_EVENT:
+        this.#eventsModel.addEvent(updateType, update);
+        break;
+      case UserAction.DELETE_EVENT:
+        this.#eventsModel.deleteEvent(updateType, update);
+        break;
+    }
   };
 
   #handleModelEvent = (updateType, data) => {
     console.log(updateType, data);
+    switch (updateType) {
+      case UpdateType.PATCH:
+        this.#eventPresenters.get(data.id).init(data);
+        break;
+      case UpdateType.MINOR:
+
+        break;
+      case UpdateType.MAJOR:
+
+        break;
+    }
   };
 
   // #handleEventChange = (updatedEvent) => {
@@ -123,7 +145,7 @@ export default class TripPresenter {
 
   #renderEvents(events, destinations, offers) {
     events.forEach((event) => this.#renderEvent({
-      event,
+      eventTrip: event,
       destinations: destinations,
       offers: offers
     }));

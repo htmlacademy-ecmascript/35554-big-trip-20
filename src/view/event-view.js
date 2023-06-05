@@ -15,8 +15,10 @@ function createEventOffersTemplate(offers) {
   </li>`).join('');
 }
 
-function createEventTemplate(eventTrip, destination, offers) {
+function createEventTemplate(eventTrip, destinations, offers) {
+  console.log(eventTrip, destinations, offers);
   const {basePrice, dateFrom, dateTo, type, isFavorite} = eventTrip;
+  const destination = destinations.find((element) => element.id === eventTrip.destination);
   const currentOffers = offers.find((element) => element.type === type).offers;
 
   const date = getRefineEventDateTime(dateFrom);
@@ -69,15 +71,15 @@ function createEventTemplate(eventTrip, destination, offers) {
 
 export default class EventView extends AbstractView {
   #eventTrip = null;
-  #destination = null;
+  #destinations = null;
   #offers = null;
   #handleEditClick = null;
   #handleFavoriteClick = null;
 
-  constructor({eventTrip, destination, offers, onEditClick, onFavoriteClick}) {
+  constructor({eventTrip, destinations, offers, onEditClick, onFavoriteClick}) {
     super();
     this.#eventTrip = eventTrip;
-    this.#destination = destination;
+    this.#destinations = destinations;
     this.#offers = offers;
     this.#handleEditClick = onEditClick;
     this.#handleFavoriteClick = onFavoriteClick;
@@ -89,7 +91,7 @@ export default class EventView extends AbstractView {
   }
 
   get template() {
-    return createEventTemplate(this.#eventTrip, this.#destination, this.#offers);
+    return createEventTemplate(this.#eventTrip, this.#destinations, this.#offers);
   }
 
   #editClickHandler = (evt) => {
