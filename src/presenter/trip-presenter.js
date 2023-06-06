@@ -3,8 +3,6 @@ import TripListView from '../view/trip-list-view';
 import SortView from '../view/sort-view';
 import TripListEmptyView from '../view/trip-list-empty-view';
 import EventPresenter from './event-presenter';
-import TripInfoView from '../view/trip-info-view';
-// import {updateItem} from '../utils/common';
 import {FilterType, SortType, UpdateType, UserAction} from '../const';
 import {sortByDay, sortByPrice, sortByTime} from '../utils/events';
 import {filter} from '../utils/filter';
@@ -18,7 +16,6 @@ export default class TripPresenter {
   #tripListComponent = new TripListView();
   #sortComponent = null;
   #tripEmptyComponent = null;
-  #tripInfoComponent = null;
 
   #eventPresenters = new Map();
   #currentSortType = SortType.DAY;
@@ -96,26 +93,6 @@ export default class TripPresenter {
     }
   };
 
-  // #handleEventChange = (updatedEvent) => {
-  //   // this.#tripEvents = updateItem(this.#tripEvents, updatedEvent);
-  //   this.#eventPresenters.get(updatedEvent.id).init(updatedEvent);
-  // };
-
-  // #sortEvents(sortType) {
-  //   switch (sortType) {
-  //     case SortType.DAY:
-  //       this.#tripEvents.sort(sortByDay);
-  //       break;
-  //     case SortType.TIME:
-  //       this.#tripEvents.sort(sortByTime);
-  //       break;
-  //     case SortType.PRICE:
-  //       this.#tripEvents.sort(sortByPrice);
-  //       break;
-  //   }
-  //   this.#currentSortType = sortType;
-  // }
-
   #handleSortTypeChange = (sortType) => {
     if (this.#currentSortType === sortType) {
       return;
@@ -155,6 +132,9 @@ export default class TripPresenter {
   }
 
   #renderTripEmpty() {
+    this.#tripEmptyComponent = new TripListEmptyView({
+      filterType: this.#filterType,
+    });
     render(this.#tripEmptyComponent, this.#tripContainer);
   }
 
@@ -172,7 +152,10 @@ export default class TripPresenter {
     this.#eventPresenters.clear();
 
     remove(this.#sortComponent);
-    remove(this.#tripEmptyComponent);
+
+    if (this.#tripEmptyComponent) {
+      remove(this.#tripEmptyComponent);
+    }
 
     if (resetSortType) {
       this.#currentSortType = SortType.DAY;
