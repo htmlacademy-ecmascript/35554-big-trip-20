@@ -46,7 +46,6 @@ function createPicturesDestinationTemplate(destination) {
 
 function createEventEditTemplate({state, destinations, offers}) {
   const {eventTrip} = state;
-  console.log(state, eventTrip);
   const {basePrice, type, dateFrom, dateTo} = eventTrip;
   const dateFullFrom = getRefineFullDate(dateFrom);
   const dateFullTo = getRefineFullDate(dateTo);

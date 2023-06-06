@@ -5,7 +5,7 @@ import TripListEmptyView from '../view/trip-list-empty-view';
 import EventPresenter from './event-presenter';
 import TripInfoView from '../view/trip-info-view';
 // import {updateItem} from '../utils/common';
-import {SortType, UpdateType, UserAction} from '../const';
+import {FilterType, SortType, UpdateType, UserAction} from '../const';
 import {sortByDay, sortByPrice, sortByTime} from '../utils/events';
 import {filter} from '../utils/filter';
 
@@ -17,11 +17,12 @@ export default class TripPresenter {
 
   #tripListComponent = new TripListView();
   #sortComponent = null;
-  #tripEmptyComponent = new TripListEmptyView();
+  #tripEmptyComponent = null;
   #tripInfoComponent = null;
 
   #eventPresenters = new Map();
   #currentSortType = SortType.DAY;
+  #filterType = FilterType.EVERYTHING;
 
   constructor({tripContainer, headerContainer, eventsModel, filterModel}) {
     this.#tripContainer = tripContainer;
@@ -34,9 +35,9 @@ export default class TripPresenter {
   }
 
   get events() {
-    const filterType = this.#filterModel.filter;
+    this.#filterType = this.#filterModel.filter;
     const events = this.#eventsModel.events;
-    const filteredEvents = filter[filterType](events);
+    const filteredEvents = filter[this.#filterType](events);
 
     switch (this.#currentSortType) {
       case SortType.DAY:
@@ -58,10 +59,6 @@ export default class TripPresenter {
   }
 
   init() {
-    // this.#tripEvents = [...this.#eventsModel.events];
-    // this.#destinations = [...this.#eventsModel.destinations];
-    // this.#offers = [...this.#eventsModel.offers];
-
     this.#renderTrip();
   }
 
@@ -70,7 +67,6 @@ export default class TripPresenter {
   };
 
   #handleViewAction = (actionType, updateType, update) => {
-    console.log(actionType, updateType, update);
     switch (actionType) {
       case UserAction.UPDATE_EVENT:
         this.#eventsModel.updateEvent(updateType, update);
@@ -85,16 +81,17 @@ export default class TripPresenter {
   };
 
   #handleModelEvent = (updateType, data) => {
-    console.log(updateType, data);
     switch (updateType) {
       case UpdateType.PATCH:
         this.#eventPresenters.get(data.id).init(data);
         break;
       case UpdateType.MINOR:
-
+        this.#clearTrip();
+        this.#renderTrip();
         break;
       case UpdateType.MAJOR:
-
+        this.#clearTrip({resetSortType: true});
+        this.#renderTrip();
         break;
     }
   };
@@ -126,11 +123,12 @@ export default class TripPresenter {
 
     this.#currentSortType = sortType;
     this.#clearTrip();
-    this.#renderTripList();
+    this.#renderTrip();
   };
 
   #renderSort() {
     this.#sortComponent = new SortView({
+      currentSortType: this.#currentSortType,
       onSortTypeChange: this.#handleSortTypeChange
     });
     render(this.#sortComponent, this.#tripListComponent.element, RenderPosition.AFTERBEGIN);
@@ -159,11 +157,6 @@ export default class TripPresenter {
   #renderTripEmpty() {
     render(this.#tripEmptyComponent, this.#tripContainer);
   }
-
-  // #clearEventsList() {
-  //   this.#eventPresenters.forEach((presenter) =>presenter.destroy());
-  //   this.#eventPresenters.clear();
-  // }
 
   #renderTripList() {
     const events = this.events;
