@@ -7,41 +7,46 @@ import TripInfoView from '../view/trip-info-view';
 // import {updateItem} from '../utils/common';
 import {SortType, UpdateType, UserAction} from '../const';
 import {sortByDay, sortByPrice, sortByTime} from '../utils/events';
+import {filter} from '../utils/filter';
 
 export default class TripPresenter {
   #tripContainer = null;
   #headerContainer = null;
   #eventsModel = null;
+  #filterModel = null;
 
   #tripListComponent = new TripListView();
   #sortComponent = null;
   #tripEmptyComponent = new TripListEmptyView();
   #tripInfoComponent = null;
 
-  // #tripEvents = [];
-  // #destinations = [];
-  // #offers = [];
   #eventPresenters = new Map();
   #currentSortType = SortType.DAY;
 
-  constructor({tripContainer, headerContainer, eventsModel}) {
+  constructor({tripContainer, headerContainer, eventsModel, filterModel}) {
     this.#tripContainer = tripContainer;
     this.#headerContainer = headerContainer;
     this.#eventsModel = eventsModel;
+    this.#filterModel = filterModel;
 
-    this.#eventsModel.addObserver(this.handleModelEvent);
+    this.#eventsModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   get events() {
+    const filterType = this.#filterModel.filter;
+    const events = this.#eventsModel.events;
+    const filteredEvents = filter[filterType](events);
+
     switch (this.#currentSortType) {
       case SortType.DAY:
-        return [...this.#eventsModel.events].sort(sortByDay);
+        return filteredEvents.sort(sortByDay);
       case SortType.TIME:
-        return [...this.#eventsModel.events].sort(sortByTime);
+        return filteredEvents.sort(sortByTime);
       case SortType.PRICE:
-        return [...this.#eventsModel.events].sort(sortByPrice);
+        return filteredEvents.sort(sortByPrice);
     }
-    return this.#eventsModel.events;
+    return filteredEvents;
   }
 
   get destinations() {
