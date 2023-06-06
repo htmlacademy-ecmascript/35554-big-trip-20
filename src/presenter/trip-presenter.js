@@ -179,11 +179,6 @@ export default class TripPresenter {
     }
   }
 
-  #renderTripInfo() {
-    this.#tripInfoComponent = new TripInfoView({eventsModel: this.#eventsModel});
-    render(this.#tripInfoComponent, this.#headerContainer, RenderPosition.AFTERBEGIN);
-  }
-
   #renderTrip() {
     render(this.#tripListComponent, this.#tripContainer);
 
@@ -194,6 +189,5 @@ export default class TripPresenter {
 
     this.#renderSort();
     this.#renderTripList();
-    this.#renderTripInfo();
   }
 }
