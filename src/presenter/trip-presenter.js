@@ -120,7 +120,7 @@ export default class TripPresenter {
     }
 
     this.#currentSortType = sortType;
-    this.#clearEventsList();
+    this.#clearTrip();
     this.#renderTripList();
   };
 
