@@ -4,6 +4,7 @@ import EventsModel from './model/events-model';
 import FilterModel from './model/filter-model';
 import InfoPresenter from './presenter/info-presenter';
 import {render} from './framework/render';
+import NewEventButtonView from './view/new-event-button-view';
 
 const siteTripMainElement = document.querySelector('.trip-main');
 const tripEventsElement = document.querySelector('.trip-events');
