@@ -10,7 +10,6 @@ import NewEventPresenter from './new-event-presenter';
 
 export default class TripPresenter {
   #tripContainer = null;
-  #headerContainer = null;
   #eventsModel = null;
   #filterModel = null;
 
@@ -23,16 +22,17 @@ export default class TripPresenter {
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
 
-  constructor({tripContainer, headerContainer, eventsModel, filterModel, onNewEventDestroy}) {
+  constructor({tripContainer, eventsModel, filterModel, onNewEventDestroy}) {
     this.#tripContainer = tripContainer;
-    this.#headerContainer = headerContainer;
     this.#eventsModel = eventsModel;
     this.#filterModel = filterModel;
 
     this.#newEventPresenter = new NewEventPresenter({
       eventListContainer: this.#tripListComponent.element,
       onDataChange: this.#handleViewAction,
-      onDestroy: onNewEventDestroy
+      onDestroy: onNewEventDestroy,
+      destinations: this.destinations,
+      offers: this.offers
     });
 
     this.#eventsModel.addObserver(this.#handleModelEvent);

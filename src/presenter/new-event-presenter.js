@@ -5,23 +5,29 @@ import {nanoid} from 'nanoid';
 
 export default class NewEventPresenter {
   #eventListContainer = null;
+  #destinations = null;
+  #offers = null;
   #handleDataChange = null;
   #handleDestroy = null;
 
   #eventEditComponent = null;
 
-  constructor({eventListContainer, onDataChange, onDestroy}) {
+  constructor({eventListContainer, destinations, offers, onDataChange, onDestroy}) {
     this.#eventListContainer = eventListContainer;
+    this.#destinations = destinations;
+    this.#offers = offers;
     this.#handleDataChange = onDataChange;
     this.#handleDestroy = onDestroy;
   }
 
   init() {
-    if (this.#eventListContainer !== null) {
-      return;
-    }
+    // if (this.#eventListContainer !== null) {
+    //   return;
+    // }
 
     this.#eventEditComponent = new EventEditView({
+      destinations: this.#destinations,
+      offers: this.#offers,
       onFormSubmit: this.#handleFormSubmit,
       onDeleteClick: this.#handleDeleteClick
     });

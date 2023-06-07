@@ -44,6 +44,16 @@ function createPicturesDestinationTemplate(destination) {
   }
 }
 
+function createButtonResetTemplate(state) {
+  const isNewEvent = !state.eventTrip.id;
+  return isNewEvent
+    ? '<button class="event__reset-btn" type="reset">Cancel</button>'
+    : `<button class="event__reset-btn" type="reset">Delete</button>
+      <button class="event__rollup-btn" type="button">
+        <span class="visually-hidden">Open event</span>
+      </button>`;
+}
+
 function createEventEditTemplate({state, destinations, offers}) {
   const {eventTrip} = state;
   const {basePrice, type, dateFrom, dateTo} = eventTrip;
@@ -53,7 +63,13 @@ function createEventEditTemplate({state, destinations, offers}) {
   const currentOffers = offers.find((element) => element.type === type).offers;
   const offersList = createOffersTemplate(eventTrip, currentOffers);
   const destination = destinations.find((element) => element.id === eventTrip.destination);
+  console.log(currentOffers, destination);
   const picturesList = createPicturesDestinationTemplate(destination);
+  const buttonReset = createButtonResetTemplate(state);
+
+  const isDestination = !destination;
+  const isDestinationName = isDestination ? '' : destination.name;
+  const isDestinationDescription = isDestination ? '' : destination.description;
 
   return (
     `<li class="trip-events__item">
@@ -79,7 +95,7 @@ function createEventEditTemplate({state, destinations, offers}) {
             ${type}
             </label>
             <input class="event__input  event__input--destination" id="event-destination-1"
-            type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
+            type="text" name="event-destination" value="${isDestinationName}" list="destination-list-1">
             <datalist id="destination-list-1"/>
               ${citiesTemplate}
             </datalist>
@@ -105,29 +121,26 @@ function createEventEditTemplate({state, destinations, offers}) {
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">Delete</button>
-          <button class="event__rollup-btn" type="button">
-            <span class="visually-hidden">Open event</span>
-          </button>
+          ${buttonReset}
         </header>
         <section class="event__details">
-          <section class="event__section  event__section--offers">
+          ${currentOffers.length === 0 ? '' : `<section class="event__section  event__section--offers">
             <h3 class="event__section-title  event__section-title--offers">Offers</h3>
             <div class="event__available-offers">
             ${offersList}
             </div>
-          </section>
+          </section>`}
 
-          <section class="event__section  event__section--destination">
+          ${isDestination ? '' : `<section class="event__section  event__section--destination">
             <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-            <p class="event__destination-description">${destination.description}</p>
+            <p class="event__destination-description">${isDestinationDescription}</p>
 
             <div class="event__photos-container">
               <div class="event__photos-tape">
               ${picturesList}
               </div>
             </div>
-          </section>
+          </section>`}
         </section>
       </form>
     </li>`
@@ -184,10 +197,12 @@ export default class EventEditView extends AbstractStatefulView {
   _restoreHandlers() {
     this.element.querySelector('form')
       .addEventListener('submit', this.#formSubmitHandler);
-    this.element.querySelector('.event__rollup-btn')
-      .addEventListener('click', this.#toggleClickHandler);
-    this.element.querySelector('.event__reset-btn')
-      .addEventListener('click', this.#canselClickHandler);
+
+    const eventRollupButton = this.element.querySelector('.event__rollup-btn');
+    if (eventRollupButton) {
+      eventRollupButton.addEventListener('click', this.#toggleClickHandler);
+    }
+
     this.element.querySelector('.event__type-group')
       .addEventListener('change', this.#typeEventClickHandler);
     this.element.querySelector('.event__input--destination')
@@ -196,6 +211,17 @@ export default class EventEditView extends AbstractStatefulView {
       .addEventListener('change', this.#priceInputHandler);
     this.element.querySelectorAll('.event__offer-selector')
       .forEach((input) => input.addEventListener('change', this.#offerClickHandler));
+
+    const eventButtonReset = this.element.querySelector('.event__reset-btn');
+
+    switch (false) {
+      case true:
+        eventButtonReset.addEventListener('click', this.#canselClickHandler);
+        break;
+      case false:
+        eventButtonReset.addEventListener('click', this.#deleteClickHandler);
+        break;
+    }
 
     this.#setDatepicker();
   }
