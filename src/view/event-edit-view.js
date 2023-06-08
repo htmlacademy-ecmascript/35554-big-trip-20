@@ -1,6 +1,8 @@
+import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 import {CITIES, EVENT_EMPTY, WAYPOINTS} from '../const';
 import {getRefineFullDate} from '../utils/events';
-import AbstractStatefulView from '../framework/view/abstract-stateful-view';
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
 
 function createEventEditTypeTemplate(currentType) {
   return WAYPOINTS.map((type) => `
@@ -138,6 +140,8 @@ export default class EventEditView extends AbstractStatefulView {
   #handleFormSubmit = null;
   #handleToggleClick = null;
   #handleDeleteClick = null;
+  #datepickerFrom = null;
+  #datepickerTo = null;
 
   constructor({eventTrip = EVENT_EMPTY, destinations, offers, onFormSubmit, onToggleClick, onDeleteClick}) {
     super();
@@ -159,6 +163,20 @@ export default class EventEditView extends AbstractStatefulView {
     });
   }
 
+  removeElement() {
+    super.removeElement();
+
+    if (this.#datepickerFrom) {
+      this.#datepickerFrom.destroy();
+      this.#datepickerFrom = null;
+    }
+
+    if (this.#datepickerTo) {
+      this.#datepickerTo.destroy();
+      this.#datepickerTo = null;
+    }
+  }
+
   reset = (event) => this.updateElement({event});
 
   _restoreHandlers() {
@@ -174,11 +192,10 @@ export default class EventEditView extends AbstractStatefulView {
       .addEventListener('change', this.#cityChangeHandler);
     this.element.querySelector('.event__input--price')
       .addEventListener('change', this.#priceInputHandler);
-    this.element.querySelectorAll('.event__input--time')
-      .forEach((input) => input
-        .addEventListener('change', this.#dateChangeHandler));
     this.element.querySelectorAll('.event__offer-selector')
       .forEach((input) => input.addEventListener('change', this.#offerClickHandler));
+
+    this.#setDatepicker();
   }
 
   #toggleClickHandler = (evt) => {
@@ -231,25 +248,6 @@ export default class EventEditView extends AbstractStatefulView {
     });
   };
 
-  #dateChangeHandler = (evt) => {
-    evt.preventDefault();
-    if (evt.target.name === 'event-start-time') {
-      this.updateElement({
-        eventTrip: {
-          ...this._state.eventTrip,
-          dateFrom: getRefineFullDate(evt.target.value)
-        },
-      });
-    } else {
-      this.updateElement({
-        eventTrip: {
-          ...this._state.eventTrip,
-          dateTo: getRefineFullDate(evt.target.value)
-        },
-      });
-    }
-  };
-
   #offerClickHandler = (evt) => {
     evt.preventDefault();
     const checkedOffers = Array.from(this.element.querySelectorAll('.event__offer-checkbox:checked'));
@@ -260,6 +258,54 @@ export default class EventEditView extends AbstractStatefulView {
         offers: checkedOffers.map((element) => element.dataset.offerId)
       }
     });
+  };
+
+  #dateFromChangeHandler = ([userDate]) => {
+    this._setState({
+      eventTrip: {
+        ...this._state.eventTrip,
+        dateFrom: userDate
+      },
+    });
+    this.#datepickerTo.set('minDate', this._state.eventTrip.dateFrom);
+  };
+
+  #dateToChangeHandler = ([userDate]) => {
+    this._setState({
+      eventTrip: {
+        ...this._state.eventTrip,
+        dateTo: userDate
+      },
+    });
+
+    this.#datepickerFrom.set('maxDate', this._state.eventTrip.dateTo);
+  };
+
+  #setDatepicker = () => {
+    const [dateFrom, dateTo] = this.element.querySelectorAll('.event__input--time');
+    this.#datepickerFrom = flatpickr(
+      dateFrom,
+      {
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._state.dateFrom,
+        onClose: this.#dateFromChangeHandler,
+        maxDate: this._state.dateTo,
+        enableTime: true,
+        'time_24hr': true,
+      },
+    );
+
+    this.#datepickerTo = flatpickr(
+      dateTo,
+      {
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._state.dateTo,
+        onClose: this.#dateToChangeHandler,
+        enableTime: true,
+        minDate: this._state.dateFrom,
+        'time_24hr': true,
+      },
+    );
   };
 
   static parseEventToState = ({eventTrip}) => ({eventTrip});
