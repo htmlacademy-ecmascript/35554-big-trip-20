@@ -1,16 +1,61 @@
-import {render} from '../framework/render';
+import {remove, render, replace} from '../framework/render';
 import FilterView from '../view/filter-view';
+import {FilterType, UpdateType} from '../const';
+import {filter} from '../utils/filter';
 
 export default class FilterPresenter {
-  #infoContainer = null;
-  #filters = null;
+  #filterContainer = null;
+  #filterModel = null;
+  #eventsModel = null;
 
-  constructor({filters}) {
-    this.#filters = filters;
-    this.#infoContainer = document.querySelector('.trip-controls__filters');
+  #filterComponent = null;
+
+  constructor({filterContainer, filterModel, eventsModel}) {
+    this.#filterContainer = filterContainer;
+    this.#filterModel = filterModel;
+    this.#eventsModel = eventsModel;
+
+    this.#eventsModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
+  }
+
+  get filters() {
+    const events = this.#eventsModel.events;
+    return Object.values(FilterType).map((type) => ({
+      type,
+      count: filter[type](events).length
+    }));
   }
 
   init() {
-    render(new FilterView({filters: this.#filters}), this.#infoContainer);
+    const filters = this.filters;
+    const prevFilterComponent = this.#filterComponent;
+
+    this.#filterComponent = new FilterView({
+      filters,
+      currentFilterType: this.#filterModel.filter,
+      onFilterTypeChange: this.#handleFilterTypeChange
+    });
+
+    if (prevFilterComponent === null) {
+      render(this.#filterComponent, this.#filterContainer);
+      return;
+    }
+
+    replace(this.#filterComponent, prevFilterComponent);
+    remove(prevFilterComponent);
   }
+
+  #handleModelEvent = () => {
+    this.init();
+  };
+
+  #handleFilterTypeChange = (filterType) => {
+    if (this.#filterModel.filter === filterType) {
+      return;
+    }
+
+    this.#filterModel.setFilter(UpdateType.MAJOR, filterType);
+  };
+
 }

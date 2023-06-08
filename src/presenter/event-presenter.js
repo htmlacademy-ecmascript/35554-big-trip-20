@@ -1,6 +1,7 @@
 import EventView from '../view/event-view';
 import {remove, render, replace} from '../framework/render';
 import EventEditView from '../view/event-edit-view';
+import {UpdateType, UserAction} from '../const';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -16,16 +17,14 @@ export default class EventPresenter {
   #eventEditComponent = null;
 
   #eventTrip = null;
-  #destination = null;
   #destinations = null;
   #offers = null;
   #mode = Mode.DEFAULT;
 
-  constructor({eventListContainer, onDataChange, onModeChange, destination, destinations, offers}) {
+  constructor({eventListContainer, onDataChange, onModeChange, destinations, offers}) {
     this.#eventListContainer = eventListContainer;
     this.#handleDataChange = onDataChange;
     this.#handleModeChange = onModeChange;
-    this.#destination = destination;
     this.#destinations = destinations;
     this.#offers = offers;
   }
@@ -38,7 +37,7 @@ export default class EventPresenter {
 
     this.#eventComponent = new EventView({
       eventTrip: this.#eventTrip,
-      destination: this.#destination,
+      destinations: this.#destinations,
       offers: this.#offers,
       onEditClick: this.#handleEditClick,
       onFavoriteClick: this.#handleFavoriteClick
@@ -50,6 +49,7 @@ export default class EventPresenter {
       onFormSubmit: this.#handleFormSubmit,
       onToggleClick: this.#handleToggleClick,
       onDeleteClick: this.#handleDeleteClick,
+      onCanselClick: this.#handleCanselClick,
     });
 
     if (prevEventComponent === null || prevEventEditComponent === null) {
@@ -111,17 +111,33 @@ export default class EventPresenter {
     this.#replaceEditorToEvent();
   };
 
-  #handleDeleteClick = () => {
+  #handleCanselClick = () => {
     this.#eventEditComponent.reset(this.#eventTrip);
     this.#replaceEditorToEvent();
   };
 
+  #handleDeleteClick = (event) => {
+    this.#handleDataChange(
+      UserAction.DELETE_EVENT,
+      UpdateType.MINOR,
+      event
+    );
+  };
+
   #handleFavoriteClick = () => {
-    this.#handleDataChange({...this.#eventTrip, isFavorite: !this.#eventTrip.isFavorite});
+    this.#handleDataChange(
+      UserAction.UPDATE_EVENT,
+      UpdateType.MINOR,
+      {...this.#eventTrip, isFavorite: !this.#eventTrip.isFavorite}
+    );
   };
 
   #handleFormSubmit = (eventTrip) => {
-    this.#handleDataChange(eventTrip);
+    this.#handleDataChange(
+      UserAction.UPDATE_EVENT,
+      UpdateType.MINOR,
+      eventTrip,
+    );
     this.#replaceEditorToEvent();
   };
 }
