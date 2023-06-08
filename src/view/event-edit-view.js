@@ -259,7 +259,6 @@ export default class EventEditView extends AbstractStatefulView {
     evt.preventDefault();
     const currentDestination = this.#destinations
       .find((element) => element.name === evt.target.value);
-    console.log(currentDestination);
 
     if (currentDestination) {
       this.updateElement({
@@ -280,7 +279,6 @@ export default class EventEditView extends AbstractStatefulView {
   #offerClickHandler = (evt) => {
     evt.preventDefault();
     const checkedOffers = Array.from(this.element.querySelectorAll('.event__offer-checkbox:checked'));
-    console.log(checkedOffers);
 
     this._setState({
       ...this._state,
