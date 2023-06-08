@@ -45,7 +45,7 @@ function createPicturesDestinationTemplate(destination) {
 }
 
 function createButtonResetTemplate(state) {
-  const isNewEvent = !state.eventTrip.id;
+  const isNewEvent = !state.id;
   return isNewEvent
     ? '<button class="event__reset-btn" type="reset">Cancel</button>'
     : `<button class="event__reset-btn" type="reset">Delete</button>
@@ -55,7 +55,7 @@ function createButtonResetTemplate(state) {
 }
 
 function createEventEditTemplate({state, destinations, offers}) {
-  const {eventTrip} = state;
+  const eventTrip = state;
   const {basePrice, type, dateFrom, dateTo} = eventTrip;
   const dateFullFrom = getRefineFullDate(dateFrom);
   const dateFullTo = getRefineFullDate(dateTo);
@@ -159,7 +159,7 @@ export default class EventEditView extends AbstractStatefulView {
 
   constructor({eventTrip = EVENT_EMPTY, destinations, offers, onFormSubmit, onToggleClick, onDeleteClick, onCanselClick}) {
     super();
-    this._setState(EventEditView.parseEventToState({eventTrip}));
+    this._setState(EventEditView.parseEventToState(eventTrip));
     this.#destinations = destinations;
     this.#offers = offers;
     this.#handleFormSubmit = onFormSubmit;
@@ -192,7 +192,7 @@ export default class EventEditView extends AbstractStatefulView {
     }
   }
 
-  reset = (event) => this.updateElement({event});
+  reset = (event) => this.updateElement(event);
 
   _restoreHandlers() {
     this.element.querySelector('form')
@@ -249,10 +249,8 @@ export default class EventEditView extends AbstractStatefulView {
   #typeEventClickHandler = (evt) => {
     evt.preventDefault();
     this.updateElement({
-      eventTrip: {
-        ...this._state.eventTrip,
-        type: evt.target.value,
-      },
+      ...this._state,
+      type: evt.target.value,
     });
   };
 
@@ -263,10 +261,8 @@ export default class EventEditView extends AbstractStatefulView {
 
     if (currentDestination) {
       this.updateElement({
-        eventTrip: {
-          ...this._state.eventTrip,
-          destination: currentDestination.id
-        },
+        ...this._state,
+        destination: currentDestination.id
       });
     }
   };
@@ -274,10 +270,8 @@ export default class EventEditView extends AbstractStatefulView {
   #priceInputHandler = (evt) => {
     evt.preventDefault();
     this._setState({
-      eventTrip: {
-        ...this._state.eventTrip,
-        basePrice: evt.target.value
-      },
+      ...this._state,
+      basePrice: evt.target.value
     });
   };
 
@@ -286,32 +280,26 @@ export default class EventEditView extends AbstractStatefulView {
     const checkedOffers = Array.from(this.element.querySelectorAll('.event__offer-checkbox:checked'));
 
     this._setState({
-      eventTrip: {
-        ...this._state.eventTrip,
-        offers: checkedOffers.map((element) => element.dataset.offerId)
-      }
+      ...this._state,
+      offers: checkedOffers.map((element) => element.dataset.offerId)
     });
   };
 
   #dateFromChangeHandler = ([userDate]) => {
     this._setState({
-      eventTrip: {
-        ...this._state.eventTrip,
-        dateFrom: userDate
-      },
+      ...this._state,
+      dateFrom: userDate
     });
-    this.#datepickerTo.set('minDate', this._state.eventTrip.dateFrom);
+    this.#datepickerTo.set('minDate', this._state.dateFrom);
   };
 
   #dateToChangeHandler = ([userDate]) => {
     this._setState({
-      eventTrip: {
-        ...this._state.eventTrip,
-        dateTo: userDate
-      },
+      ...this._state,
+      dateTo: userDate
     });
 
-    this.#datepickerFrom.set('maxDate', this._state.eventTrip.dateTo);
+    this.#datepickerFrom.set('maxDate', this._state.dateTo);
   };
 
   #setDatepicker = () => {
@@ -341,7 +329,7 @@ export default class EventEditView extends AbstractStatefulView {
     );
   };
 
-  static parseEventToState = ({eventTrip}) => ({eventTrip});
+  static parseEventToState = (eventTrip) => ({...eventTrip});
 
-  static parseStateToEvent = (state) => state.eventTrip;
+  static parseStateToEvent = (state) => state;
 }
