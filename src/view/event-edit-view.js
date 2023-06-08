@@ -24,8 +24,9 @@ function createDestinationCitiesTemplate() {
 
 function createOffersTemplate(event, offers) {
   const isChecked = (offer) => event.offers.includes(offer.id) ? 'checked' : '';
+  const currentOffers = offers.find((element) => element.type === event.type).offers;
 
-  return offers.map((offer) => `
+  return currentOffers.map((offer) => `
     <div class="event__offer-selector">
       <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}"
       type="checkbox" name="event-offer-luggage" data-offer-id="${offer.id}" ${isChecked(offer)}/>
@@ -60,8 +61,8 @@ function createEventEditTemplate({state, destinations, offers}) {
   const dateFullFrom = getRefineFullDate(dateFrom);
   const dateFullTo = getRefineFullDate(dateTo);
   const citiesTemplate = createDestinationCitiesTemplate();
-  const currentOffers = offers.find((element) => element.type === type).offers;
-  const offersList = createOffersTemplate(eventTrip, currentOffers);
+  // const currentOffers = offers.find((element) => element.type === type).offers;
+  const offersList = createOffersTemplate(eventTrip, offers);
   const destination = destinations.find((element) => element.id === eventTrip.destination);
   const picturesList = createPicturesDestinationTemplate(destination);
   const buttonReset = createButtonResetTemplate(state);
@@ -123,7 +124,7 @@ function createEventEditTemplate({state, destinations, offers}) {
           ${buttonReset}
         </header>
         <section class="event__details">
-          ${currentOffers.length === 0 ? '' : `<section class="event__section  event__section--offers">
+          ${offers.length === 0 ? '' : `<section class="event__section  event__section--offers">
             <h3 class="event__section-title  event__section-title--offers">Offers</h3>
             <div class="event__available-offers">
             ${offersList}
@@ -250,6 +251,7 @@ export default class EventEditView extends AbstractStatefulView {
     this.updateElement({
       ...this._state,
       type: evt.target.value,
+      offers: []
     });
   };
 
@@ -257,6 +259,7 @@ export default class EventEditView extends AbstractStatefulView {
     evt.preventDefault();
     const currentDestination = this.#destinations
       .find((element) => element.name === evt.target.value);
+    console.log(currentDestination);
 
     if (currentDestination) {
       this.updateElement({
@@ -277,6 +280,7 @@ export default class EventEditView extends AbstractStatefulView {
   #offerClickHandler = (evt) => {
     evt.preventDefault();
     const checkedOffers = Array.from(this.element.querySelectorAll('.event__offer-checkbox:checked'));
+    console.log(checkedOffers);
 
     this._setState({
       ...this._state,

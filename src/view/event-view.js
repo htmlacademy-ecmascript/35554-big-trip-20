@@ -18,7 +18,12 @@ function createEventOffersTemplate(offers) {
 function createEventTemplate(eventTrip, destinations, offers) {
   const {basePrice, dateFrom, dateTo, type, isFavorite} = eventTrip;
   const destination = destinations.find((element) => element.id === eventTrip.destination);
+  const isDestination = !destination;
+  const isDestinationName = isDestination ? '' : destination.name;
+
   const currentOffers = offers.find((element) => element.type === type).offers;
+  const selectedOffers = eventTrip.offers.map((offerId) => currentOffers.find((element) => element.id === offerId));
+  const offersList = createEventOffersTemplate(selectedOffers);
 
   const date = getRefineEventDateTime(dateFrom);
   const dateShort = getRefineEventDateShort(dateFrom);
@@ -37,7 +42,7 @@ function createEventTemplate(eventTrip, destinations, offers) {
          <div class="event__type">
            <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
          </div>
-         <h3 class="event__title">${type} ${destination.name}</h3>
+         <h3 class="event__title">${type} ${isDestinationName}</h3>
          <div class="event__schedule">
            <p class="event__time">
              <time class="event__start-time" datetime="${date}">${dateStart}</time>
@@ -51,9 +56,9 @@ function createEventTemplate(eventTrip, destinations, offers) {
          </p>
          <h4 class="visually-hidden">Offers:</h4>
          <ul class="event__selected-offers">
-         ${createEventOffersTemplate(currentOffers)}
-
+            ${offersList}
          </ul>
+
          <button class="${favoriteClassName}" type="button">
            <span class="visually-hidden">Add to favorite</span>
            <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
