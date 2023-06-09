@@ -5,11 +5,18 @@ import FilterModel from './model/filter-model';
 import InfoPresenter from './presenter/info-presenter';
 import {render} from './framework/render';
 import NewEventButtonView from './view/new-event-button-view';
+import EventsApiService from './events-api-service';
+
+const AUTHORIZATION = 'Basic Sskjkf3d8drbn4d';
+const END_POINT = 'https://20.ecmascript.pages.academy/big-trip';
 
 const siteTripMainElement = document.querySelector('.trip-main');
 const tripEventsElement = document.querySelector('.trip-events');
 const filtersContainerElement = document.querySelector('.trip-controls__filters');
-const eventsModel = new EventsModel();
+
+const eventsModel = new EventsModel({
+  eventsApiService: new EventsApiService(END_POINT, AUTHORIZATION)
+});
 const filterModel = new FilterModel();
 
 const tripPresenter = new TripPresenter({

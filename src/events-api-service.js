@@ -7,19 +7,19 @@ const Method = {
 
 export default class EventsApiService extends ApiService {
   get events() {
-    return this._load({url: 'events'})
+    return this._load({url: 'points'})
       .then(ApiService.parseResponse);
   }
 
   async updateEvent(event) {
-    const responce = await this._load({
-      url: `events/${event.id}`,
+    const response = await this._load({
+      url: `points/${event.id}`,
       method: Method.PUT,
       body: JSON.stringify(event),
       headers: new Headers({'Content-Type': 'application/json'})
     });
 
-    const parsedResponse = await ApiService.parseResponse(responce);
+    const parsedResponse = await ApiService.parseResponse(response);
 
     return parsedResponse;
   }
