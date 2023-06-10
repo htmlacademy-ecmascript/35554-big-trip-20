@@ -1,28 +1,4 @@
-const WAYPOINTS = [
-  'Taxi',
-  'Bus',
-  'Train',
-  'Ship',
-  'Drive',
-  'Flight',
-  'Check-in',
-  'Sightseeing',
-  'Restaurant',
-];
-
 const DEFAULT_TYPE = 'Taxi';
-
-const CITIES = [
-  'Amsterdam',
-  'Chamonix',
-  'Geneva',
-  'Tokyo',
-  'Seoul',
-  'New York',
-  'Manila',
-  'Moscow',
-  'Paris'
-];
 
 const EVENT_EMPTY = {
   type: DEFAULT_TYPE,
@@ -60,4 +36,4 @@ const UpdateType = {
   INIT: 'INIT',
 };
 
-export {WAYPOINTS, CITIES, EVENT_EMPTY, FilterType, SortType, UpdateType, UserAction};
+export {EVENT_EMPTY, FilterType, SortType, UpdateType, UserAction};

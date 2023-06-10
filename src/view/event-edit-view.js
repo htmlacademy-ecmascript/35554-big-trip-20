@@ -1,12 +1,12 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
-import {CITIES, EVENT_EMPTY, WAYPOINTS} from '../const';
+import {EVENT_EMPTY} from '../const';
 import {getRefineFullDate} from '../utils/events';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
 function createEventEditTypeTemplate(offers, currentType) {
-  // const WAYPOINTS_TYPE = offers.map((offer) => offer.type);
-  return WAYPOINTS.map((type) => `
+  const WAYPOINTS_TYPE = offers.map((offer) => offer.type);
+  return WAYPOINTS_TYPE.map((type) => `
     <div class="event__type-item">
       <input id="event-type-${type}-1"
       class="event__type-input  visually-hidden"
@@ -21,7 +21,7 @@ function createEventEditTypeTemplate(offers, currentType) {
 
 function createDestinationCitiesTemplate(destinations) {
   const CITIES_NAME = destinations.map((element) => element.name);
-  return CITIES.map((element) => `<option value="${element}"></option>`).join('');
+  return CITIES_NAME.map((element) => `<option value="${element}"></option>`).join('');
 }
 
 function createOffersTemplate(event, offers) {
