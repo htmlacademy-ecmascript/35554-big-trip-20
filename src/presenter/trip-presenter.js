@@ -7,6 +7,7 @@ import {FilterType, SortType, UpdateType, UserAction} from '../const';
 import {sortByDay, sortByPrice, sortByTime} from '../utils/events';
 import {filter} from '../utils/filter';
 import NewEventPresenter from './new-event-presenter';
+import LoadingView from '../view/loading-view';
 
 export default class TripPresenter {
   #tripContainer = null;
@@ -14,6 +15,7 @@ export default class TripPresenter {
   #filterModel = null;
 
   #tripListComponent = new TripListView();
+  #loadingComponent = new LoadingView();
   #sortComponent = null;
   #tripEmptyComponent = null;
 
@@ -21,6 +23,7 @@ export default class TripPresenter {
   #newEventPresenter = null;
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
+  #isLoading = true;
 
   constructor({tripContainer, eventsModel, filterModel, onNewEventDestroy}) {
     this.#tripContainer = tripContainer;
@@ -105,6 +108,11 @@ export default class TripPresenter {
         this.#clearTrip({resetSortType: true});
         this.#renderTrip();
         break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#renderTrip();
+        break;
     }
   };
 
@@ -146,6 +154,10 @@ export default class TripPresenter {
     }));
   }
 
+  #renderLoading() {
+    render(this.#loadingComponent, this.#tripContainer, RenderPosition.AFTERBEGIN);
+  }
+
   #renderTripEmpty() {
     this.#tripEmptyComponent = new TripListEmptyView({
       filterType: this.#filterType,
@@ -168,6 +180,7 @@ export default class TripPresenter {
     this.#eventPresenters.clear();
 
     remove(this.#sortComponent);
+    remove(this.#loadingComponent);
 
     if (this.#tripEmptyComponent) {
       remove(this.#tripEmptyComponent);
@@ -180,6 +193,11 @@ export default class TripPresenter {
 
   #renderTrip() {
     render(this.#tripListComponent, this.#tripContainer);
+
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
 
     if (this.events.length === 0) {
       this.#renderTripEmpty();

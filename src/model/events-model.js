@@ -1,4 +1,5 @@
 import Observable from '../framework/observable';
+import {UpdateType} from '../const';
 
 export default class EventsModel extends Observable {
   #events = [];
@@ -13,9 +14,6 @@ export default class EventsModel extends Observable {
     // this.#events = this.#generateEvents();
     this.#eventsApiService = eventsApiService;
 
-    this.#eventsApiService.events.then((events) => {
-      console.log(events.map(this.#adaptToClient));
-    });
   }
 
   get offers() {
@@ -43,6 +41,8 @@ export default class EventsModel extends Observable {
       this.#destinations = [];
       this.#offers = [];
     }
+
+    this._notify(UpdateType.INIT);
   }
 
   updateEvent(updateType, update) {
