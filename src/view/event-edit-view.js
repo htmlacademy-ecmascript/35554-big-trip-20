@@ -1,11 +1,12 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
-import {CITIES, EVENT_EMPTY, WAYPOINTS} from '../const';
+import {EVENT_EMPTY} from '../const';
 import {getRefineFullDate} from '../utils/events';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
-function createEventEditTypeTemplate(currentType) {
-  return WAYPOINTS.map((type) => `
+function createEventEditTypeTemplate(offers, currentType) {
+  const WAYPOINTS_TYPE = offers.map((offer) => offer.type);
+  return WAYPOINTS_TYPE.map((type) => `
     <div class="event__type-item">
       <input id="event-type-${type}-1"
       class="event__type-input  visually-hidden"
@@ -18,8 +19,9 @@ function createEventEditTypeTemplate(currentType) {
     </div>`).join('');
 }
 
-function createDestinationCitiesTemplate() {
-  return CITIES.map((element) => `<option value="${element}"></option>`).join('');
+function createDestinationCitiesTemplate(destinations) {
+  const CITIES_NAME = destinations.map((element) => element.name);
+  return CITIES_NAME.map((element) => `<option value="${element}"></option>`).join('');
 }
 
 function createOffersTemplate(event, offers) {
@@ -60,9 +62,8 @@ function createEventEditTemplate({state, destinations, offers}) {
   const {basePrice, type, dateFrom, dateTo} = eventTrip;
   const dateFullFrom = getRefineFullDate(dateFrom);
   const dateFullTo = getRefineFullDate(dateTo);
-  const citiesTemplate = createDestinationCitiesTemplate();
-  // const currentOffers = offers.find((element) => element.type === type).offers;
   const offersList = createOffersTemplate(eventTrip, offers);
+  const citiesTemplate = createDestinationCitiesTemplate(destinations);
   const destination = destinations.find((element) => element.id === eventTrip.destination);
   const picturesList = createPicturesDestinationTemplate(destination);
   const buttonReset = createButtonResetTemplate(state);
@@ -85,7 +86,7 @@ function createEventEditTemplate({state, destinations, offers}) {
             <div class="event__type-list">
               <fieldset class="event__type-group">
                 <legend class="visually-hidden">Event type</legend>
-                ${createEventEditTypeTemplate(type)}
+                ${createEventEditTypeTemplate(offers, type)}
               </fieldset>
             </div>
           </div>
