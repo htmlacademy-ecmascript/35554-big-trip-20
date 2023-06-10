@@ -17,7 +17,6 @@ function createEventOffersTemplate(offers) {
 
 function createEventTemplate(eventTrip, destinations, offers) {
   const {basePrice, dateFrom, dateTo, type, isFavorite} = eventTrip;
-  console.log(eventTrip, offers, destinations);
   const destination = destinations.find((element) => element.id === eventTrip.destination);
   const isDestination = !destination;
   const isDestinationName = isDestination ? '' : destination.name;

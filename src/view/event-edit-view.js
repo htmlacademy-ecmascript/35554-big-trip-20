@@ -5,7 +5,7 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
 function createEventEditTypeTemplate(offers, currentType) {
-  const WAYPOINTS_TYPE = offers.map((offer) => offer.type);
+  // const WAYPOINTS_TYPE = offers.map((offer) => offer.type);
   return WAYPOINTS.map((type) => `
     <div class="event__type-item">
       <input id="event-type-${type}-1"
@@ -25,6 +25,7 @@ function createDestinationCitiesTemplate(destinations) {
 }
 
 function createOffersTemplate(event, offers) {
+debugger
   const isChecked = (offer) => event.offers.includes(offer.id) ? 'checked' : '';
   const currentOffers = offers.find((element) => element.type === event.type).offers;
 

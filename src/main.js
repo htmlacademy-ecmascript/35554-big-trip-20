@@ -55,5 +55,8 @@ render(newEventButtonComponent, siteTripMainElement);
 filterPresenter.init();
 infoPresenter.init();
 tripPresenter.init();
-eventsModel.init();
+eventsModel.init()
+  .finally(() =>{
+    render(newEventButtonComponent, siteTripMainElement);
+  });
 
