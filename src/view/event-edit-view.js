@@ -25,7 +25,6 @@ function createDestinationCitiesTemplate(destinations) {
 }
 
 function createOffersTemplate(event, offers) {
-debugger
   const isChecked = (offer) => event.offers.includes(offer.id) ? 'checked' : '';
   const currentOffers = offers.find((element) => element.type === event.type).offers;
 
