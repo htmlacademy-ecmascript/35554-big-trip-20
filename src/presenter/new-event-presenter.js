@@ -1,7 +1,6 @@
 import EventEditView from '../view/event-edit-view';
 import {remove, render, RenderPosition} from '../framework/render';
 import {UpdateType, UserAction} from '../const';
-import {nanoid} from 'nanoid';
 
 export default class NewEventPresenter {
   #eventListContainer = null;

@@ -1,15 +1,3 @@
-const DEFAULT_TYPE = 'Taxi';
-
-const EVENT_EMPTY = {
-  type: DEFAULT_TYPE,
-  dateFrom: null,
-  dateTo: null,
-  basePrice: 0,
-  offers: [],
-  destination: null,
-  isFavorite: false
-};
-
 const FilterType = {
   EVERYTHING: 'everything',
   FUTURE: 'future',
@@ -36,4 +24,4 @@ const UpdateType = {
   INIT: 'INIT',
 };
 
-export {EVENT_EMPTY, FilterType, SortType, UpdateType, UserAction};
+export {FilterType, SortType, UpdateType, UserAction};
