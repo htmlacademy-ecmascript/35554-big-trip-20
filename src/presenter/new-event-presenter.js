@@ -22,9 +22,9 @@ export default class NewEventPresenter {
   }
 
   init() {
-    // if (this.#eventEditComponent !== null) {
-    //   return;
-    // }
+    if (this.#eventEditComponent !== null) {
+      return;
+    }
 
     this.#eventEditComponent = new EventEditView({
       destinations: this.#destinations,

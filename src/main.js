@@ -46,6 +46,7 @@ function handleNewEventFormClose() {
 }
 
 function handleNewEventButtonClick() {
+  debugger
   tripPresenter.createEvent();
   newEventButtonComponent.element.disabled = true;
 }

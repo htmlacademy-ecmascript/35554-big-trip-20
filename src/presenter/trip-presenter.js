@@ -39,7 +39,7 @@ export default class TripPresenter {
     this.#tripContainer = tripContainer;
     this.#eventsModel = eventsModel;
     this.#filterModel = filterModel;
-
+debugger
     this.#newEventPresenter = new NewEventPresenter({
       eventListContainer: this.#tripListComponent.element,
       onDataChange: this.#handleViewAction,
