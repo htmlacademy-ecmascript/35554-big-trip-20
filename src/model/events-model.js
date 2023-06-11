@@ -9,11 +9,7 @@ export default class EventsModel extends Observable {
 
   constructor({eventsApiService}) {
     super();
-    // this.#destinations = this.#generateDestinations();
-    // this.#offers = this.#generateOffers();
-    // this.#events = this.#generateEvents();
     this.#eventsApiService = eventsApiService;
-
   }
 
   get offers() {
@@ -95,36 +91,6 @@ export default class EventsModel extends Observable {
       throw new Error('Can\'t delete event');
     }
   }
-
-  // #generateDestinations() {
-  //   return Array.from({length:MAX_COUNT_DESCRIPTION}, () => getRandomMockDestination());
-  // }
-  //
-  // #generateOffers() {
-  //   return WAYPOINTS.map((type) => ({
-  //     type,
-  //     offers: Array.from({length: getRandomNumber(MIN_COUNT_OFFER, MAX_COUNT_OFFER)}, generateMockOffers)
-  //   }));
-  // }
-  //
-  // #generateEvents() {
-  //   return Array.from({length: EVENT_COUNT}, () => {
-  //     const type = getRandomArrayElement(WAYPOINTS);
-  //     const destination = getRandomArrayElement(this.destinations);
-  //
-  //     const hasOffer = getRandomNumber(0,1);
-  //
-  //     const offersByType = this.offers.find((offerByType) => offerByType.type === type);
-  //
-  //     const offerIds = (hasOffer)
-  //       ? offersByType.offers
-  //         .slice(0, getRandomNumber(MIN_COUNT_OFFER, MAX_COUNT_OFFER))
-  //         .map((offer) => offer.id)
-  //       : [];
-  //
-  //     return generateEvents(type, destination.id, offerIds);
-  //   });
-  // }
 
   #adaptToClient(event) {
     const adaptedEvent = {...event,

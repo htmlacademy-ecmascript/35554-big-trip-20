@@ -8,19 +8,21 @@ export default class NewEventPresenter {
   #offers = null;
   #handleDataChange = null;
   #handleDestroy = null;
+  #handleModeChange = null;
 
   #eventEditComponent = null;
 
-  constructor({eventListContainer, destinations, offers, onDataChange, onDestroy}) {
+  constructor({eventListContainer, destinations, offers, onDataChange, onDestroy, onModeChange}) {
     this.#eventListContainer = eventListContainer;
     this.#destinations = destinations;
     this.#offers = offers;
     this.#handleDataChange = onDataChange;
     this.#handleDestroy = onDestroy;
+    this.#handleModeChange = onModeChange;
   }
 
   init() {
-    // if (this.#eventListContainer !== null) {
+    // if (this.#eventEditComponent !== null) {
     //   return;
     // }
 

@@ -45,7 +45,8 @@ export default class TripPresenter {
       onDataChange: this.#handleViewAction,
       onDestroy: onNewEventDestroy,
       destinations: this.destinations,
-      offers: this.offers
+      offers: this.offers,
+      onModeChange: this.#handleModeChange
     });
 
     this.#eventsModel.addObserver(this.#handleModelEvent);
@@ -98,7 +99,7 @@ export default class TripPresenter {
       case UserAction.UPDATE_EVENT:
         this.#eventPresenters.get(update.id).setSaving();
         try {
-          this.#eventsModel.updateEvent(updateType, update);
+          await this.#eventsModel.updateEvent(updateType, update);
         } catch (err) {
           this.#eventPresenters.get(update.id).setAborting();
         }
@@ -106,7 +107,7 @@ export default class TripPresenter {
       case UserAction.ADD_EVENT:
         this.#newEventPresenter.setSaving();
         try {
-          this.#eventsModel.addEvent(updateType, update);
+          await this.#eventsModel.addEvent(updateType, update);
         } catch (err) {
           this.#newEventPresenter.setAborting();
         }
@@ -114,7 +115,7 @@ export default class TripPresenter {
       case UserAction.DELETE_EVENT:
         this.#eventPresenters.get(update.id).setDeleting();
         try {
-          this.#eventsModel.deleteEvent(updateType, update);
+          await this.#eventsModel.deleteEvent(updateType, update);
         } catch (err) {
           this.#eventPresenters.get(update.id).setAborting();
         }
