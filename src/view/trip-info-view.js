@@ -2,7 +2,7 @@ import AbstractView from '../framework/view/abstract-view';
 import {getRefineEventDateDayShort, getRefineEventDateShort} from '../utils/events';
 import dayjs from 'dayjs';
 
-function createTripInfoTemplate(events, destinations, offers) {
+function createTripInfoSumTemplate(events, offers) {
   const sumEvents = events.map((element) => element.basePrice).reduce((a, b) => a + b);
 
   const allOffers = [];
@@ -14,6 +14,14 @@ function createTripInfoTemplate(events, destinations, offers) {
   const sumOffers = allOffers.map((element) => element.price).reduce((a,b) => a + b);
   const sumEventsTotal = sumEvents + sumOffers;
 
+  return (
+    `<p class="trip-info__cost">
+      Total: &euro;&nbsp;<span class="trip-info__cost-value">${sumEventsTotal}</span>
+    </p>`
+  );
+}
+
+function createTripInfoCitiesTemplate(events, destinations) {
   const allDestinations = [];
   events.forEach((event) => {
     const destinationCurrent = destinations.find((element) => element.id === event.destination);
@@ -23,6 +31,12 @@ function createTripInfoTemplate(events, destinations, offers) {
   const lastDestination = allDestinations[allDestinations.length - 1].name;
   const middleDestination = allDestinations.length > 3 ? '...' : `&mdash; ${allDestinations[1].name} &mdash;`;
 
+  return (
+    `<h1 class="trip-info__title">${firstDestination} ${middleDestination} ${lastDestination}</h1>`
+  );
+}
+
+function createTripInfoTemplate(events, destinations, offers) {
   const firstDateEvent = getRefineEventDateShort(events[0].dateFrom);
   let lastDateEvent = getRefineEventDateShort(events[events.length - 1].dateTo);
   if (dayjs(firstDateEvent).month() === dayjs(lastDateEvent).month()) {
@@ -32,12 +46,10 @@ function createTripInfoTemplate(events, destinations, offers) {
   return (
     `<section class="trip-main__trip-info  trip-info">
       <div class="trip-info__main">
-        <h1 class="trip-info__title">${firstDestination} ${middleDestination} ${lastDestination}</h1>
+        ${createTripInfoCitiesTemplate(events, destinations)}
         <p class="trip-info__dates">${firstDateEvent}&nbsp;&mdash;&nbsp;${lastDateEvent}</p>
       </div>
-      <p class="trip-info__cost">
-      Total: &euro;&nbsp;<span class="trip-info__cost-value">${sumEventsTotal}</span>
-      </p>
+      ${createTripInfoSumTemplate(events, offers)}
     </section>`
   );
 }
