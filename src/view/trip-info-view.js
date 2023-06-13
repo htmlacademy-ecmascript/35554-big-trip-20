@@ -1,7 +1,6 @@
 import AbstractView from '../framework/view/abstract-view';
 
 function createTripInfoTemplate(events, destinations, offers) {
-  console.log(destinations, offers, events);
   const sumEvents = events.map((element) => element.basePrice).reduce((a, b) => a + b);
 
   const allOffers = [];
