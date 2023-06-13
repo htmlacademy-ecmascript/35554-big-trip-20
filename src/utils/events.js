@@ -13,6 +13,7 @@ const DateFormat = {
   DATE_SHORT: 'MMM D',
   DATE_TIME: 'YYYY-MM-DDTHH:mm',
   TIME: 'HH:mm',
+  ONLY_DAY: 'DD',
   DATE_FULL: 'DD/MM/YY HH:mm',
   MINUTES: 'mm[M]',
   HOURS_MINUTE: 'HH[H] mm[M]',
@@ -22,27 +23,18 @@ const MSEC_IN_SEC = 1000;
 const SEC_IN_MIN = 60;
 const MIN_IN_HOUR = 60;
 const HOUR_IN_DAY = 24;
+const ALERT_SHOW_TIME = 5000;
 
 const MSEC_IN_HOUR = MIN_IN_HOUR * SEC_IN_MIN * MSEC_IN_SEC;
 const MSEC_IN_DAY = HOUR_IN_DAY * MSEC_IN_HOUR;
 
-function getRefineEventDateTime(date) {
-  return date ? dayjs(date).utc().format(DateFormat.DATE_TIME) : '';
-}
+const getRefineEventDateTime = (date) => date ? dayjs(date).utc().format(DateFormat.DATE_TIME) : '';
+const getRefineEventDateShort = (date) => date ? dayjs(date).utc().format(DateFormat.DATE_SHORT) : '';
+const getRefineEventDateDayShort = (date) => date ? dayjs(date).utc().format(DateFormat.ONLY_DAY) : '';
+const getRefineTimeDate = (date) => date ? dayjs(date).utc().format(DateFormat.TIME) : '';
+const getRefineFullDate = (date) => date ? dayjs(date).utc().format(DateFormat.DATE_FULL) : '';
 
-function getRefineEventDateShort(date) {
-  return date ? dayjs(date).utc().format(DateFormat.DATE_SHORT) : '';
-}
-
-function getRefineTimeDate(date) {
-  return date ? dayjs(date).utc().format(DateFormat.TIME) : '';
-}
-
-function getRefineFullDate(date) {
-  return date ? dayjs(date).utc().format(DateFormat.DATE_FULL) : '';
-}
-
-function getTimeDifference(dateFrom, dateTo) {
+const getTimeDifference = (dateFrom, dateTo) => {
   const timeDifference = dayjs(dateTo).diff(dayjs(dateFrom));
   let durationPoint = 0;
   switch (true) {
@@ -57,21 +49,13 @@ function getTimeDifference(dateFrom, dateTo) {
       break;
   }
   return durationPoint;
-}
+};
 
-function isEventFuture(dateFrom) {
-  return dayjs(dateFrom).isAfter(dayjs());
-}
+const isEventFuture = (dateFrom) => dayjs(dateFrom).isAfter(dayjs());
+const isEventPresent = (dateFrom, dateTo) => dayjs(dateFrom).isSameOrBefore((dayjs())) && dayjs(dateTo).isSameOrAfter((dayjs()));
+const isEventPast = (dateTo) => dayjs(dateTo).isBefore((dayjs()));
 
-function isEventPresent(dateFrom, dateTo) {
-  return dayjs(dateFrom).isSameOrBefore((dayjs())) && dayjs(dateTo).isSameOrAfter((dayjs()));
-}
-
-function isEventPast(dateTo) {
-  return dayjs(dateTo).isBefore((dayjs()));
-}
-
-function sortByDay(eventA, eventB) {
+const sortByDay = (eventA, eventB) => {
   if (dayjs(eventA.dateFrom).isAfter(dayjs(eventB.dateFrom))) {
     return 1;
   }
@@ -81,18 +65,35 @@ function sortByDay(eventA, eventB) {
   if (dayjs(eventA.dateFrom).isBefore(dayjs(eventB.dateFrom))) {
     return -1;
   }
-}
+};
 
-function sortByTime(eventA, eventB) {
-  return dayjs(eventB.dateTo).diff(dayjs(eventB.dateFrom)) - dayjs(eventA.dateTo).diff(dayjs(eventA.dateFrom));
-}
+const sortByTime = (eventA, eventB) => dayjs(eventB.dateTo).diff(dayjs(eventB.dateFrom)) - dayjs(eventA.dateTo).diff(dayjs(eventA.dateFrom));
 
-function sortByPrice(eventA, eventB) {
-  return eventB.basePrice - eventA.basePrice;
-}
+const sortByPrice = (eventA, eventB) => eventB.basePrice - eventA.basePrice;
+
+const showAlert = (message) => {
+  const alertContainer = document.createElement('div');
+  alertContainer.style.zIndex = '100';
+  alertContainer.style.position = 'absolute';
+  alertContainer.style.left = '0';
+  alertContainer.style.top = '0';
+  alertContainer.style.right = '0';
+  alertContainer.style.padding = '10px 3px';
+  alertContainer.style.fontSize = '30px';
+  alertContainer.style.textAlign = 'center';
+  alertContainer.style.backgroundColor = 'red';
+
+  alertContainer.textContent = message;
+  document.body.append(alertContainer);
+
+  setTimeout(() => {
+    alertContainer.remove();
+  }, ALERT_SHOW_TIME);
+};
 
 export {
   getRefineEventDateShort,
+  getRefineEventDateDayShort,
   getRefineTimeDate,
   getTimeDifference,
   getRefineFullDate,
@@ -102,5 +103,6 @@ export {
   isEventPresent,
   sortByDay,
   sortByTime,
-  sortByPrice
+  sortByPrice,
+  showAlert
 };

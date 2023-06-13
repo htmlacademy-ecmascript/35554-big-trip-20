@@ -1,5 +1,6 @@
 import Observable from '../framework/observable';
 import {UpdateType} from '../const';
+import {showAlert} from '../utils/events';
 
 export default class EventsModel extends Observable {
   #events = [];
@@ -58,6 +59,7 @@ export default class EventsModel extends Observable {
       ];
       this._notify(updateType, updatedEvent);
     } catch (err) {
+      showAlert('Can\'t update event');
       throw new Error('Can\'t update event');
     }
   }
@@ -69,6 +71,7 @@ export default class EventsModel extends Observable {
       this.#events = [newEvent, ...this.#events];
       this._notify(updateType, newEvent);
     } catch (err) {
+      showAlert('Can\'t add event');
       throw new Error('Can\'t add event');
     }
   }
@@ -88,6 +91,7 @@ export default class EventsModel extends Observable {
       ];
       this._notify(updateType);
     } catch (err) {
+      showAlert('Can\'t delete event');
       throw new Error('Can\'t delete event');
     }
   }
