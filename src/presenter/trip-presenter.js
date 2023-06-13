@@ -9,6 +9,7 @@ import {filter} from '../utils/filter';
 import NewEventPresenter from './new-event-presenter';
 import LoadingView from '../view/loading-view';
 import UiBlocker from '../framework/ui-blocker/ui-blocker';
+import InfoPresenter from './info-presenter';
 
 const TimeLimit = {
   LOWER_LIMIT: 350,
@@ -17,6 +18,7 @@ const TimeLimit = {
 
 export default class TripPresenter {
   #tripContainer = null;
+  #infoContainer = null;
   #eventsModel = null;
   #filterModel = null;
 
@@ -27,6 +29,7 @@ export default class TripPresenter {
 
   #eventPresenters = new Map();
   #newEventPresenter = null;
+  #infoPresenter = null;
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
   #isLoading = true;
@@ -35,8 +38,9 @@ export default class TripPresenter {
     upperLimit: TimeLimit.UPPER_LIMIT
   });
 
-  constructor({tripContainer, eventsModel, filterModel, onNewEventDestroy}) {
+  constructor({tripContainer, eventsModel, filterModel, onNewEventDestroy, infoContainer}) {
     this.#tripContainer = tripContainer;
+    this.#infoContainer = infoContainer;
     this.#eventsModel = eventsModel;
     this.#filterModel = filterModel;
 
@@ -184,6 +188,19 @@ export default class TripPresenter {
     }));
   }
 
+  #renderInfo() {
+    const events = this.#eventsModel.events.sort(sortByDay);
+    const destinations = this.destinations;
+    const offers = this.offers;
+    this.#infoPresenter = new InfoPresenter({
+      infoContainer: this.#infoContainer,
+      events: events,
+      destinations: destinations,
+      offers: offers,
+    });
+    this.#infoPresenter.init();
+  }
+
   #renderLoading() {
     render(this.#loadingComponent, this.#tripContainer, RenderPosition.AFTERBEGIN);
   }
@@ -208,6 +225,7 @@ export default class TripPresenter {
     this.#newEventPresenter.destroy();
     this.#eventPresenters.forEach((presenter) => presenter.destroy());
     this.#eventPresenters.clear();
+    this.#infoPresenter.destroy();
 
     remove(this.#sortComponent);
     remove(this.#loadingComponent);
@@ -235,6 +253,7 @@ export default class TripPresenter {
     }
 
     this.#renderSort();
+    this.#renderInfo();
     this.#renderTripList();
   }
 }

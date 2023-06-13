@@ -27,7 +27,8 @@ async function main() {
     tripContainer: tripEventsElement,
     eventsModel,
     filterModel,
-    onNewEventDestroy: handleNewEventFormClose
+    onNewEventDestroy: handleNewEventFormClose,
+    infoContainer: siteTripMainElement,
   });
 
   const filterPresenter = new FilterPresenter({
@@ -36,10 +37,10 @@ async function main() {
     eventsModel
   });
 
-  const infoPresenter = new InfoPresenter({
-    infoContainer: siteTripMainElement,
-    eventsModel
-  });
+  // const infoPresenter = new InfoPresenter({
+  //   infoContainer: siteTripMainElement,
+  //   eventsModel
+  // });
 
   const newEventButtonComponent = new NewEventButtonView({
     onClick: handleNewEventButtonClick
@@ -54,10 +55,10 @@ async function main() {
     newEventButtonComponent.element.disabled = true;
   }
 
-  render(newEventButtonComponent, siteTripMainElement);
+  // render(newEventButtonComponent, siteTripMainElement);
 
   filterPresenter.init();
-  infoPresenter.init();
+  // infoPresenter.init();
   tripPresenter.init();
   eventsModel.init()
     .finally(() => {

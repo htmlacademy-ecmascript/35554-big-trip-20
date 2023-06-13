@@ -1,13 +1,18 @@
 import AbstractView from '../framework/view/abstract-view';
 
-function createTripInfoTemplate(eventModel) {
-  const events = eventModel.events;
-  const destinations = eventModel.destinations;
-  const offers = eventModel.offers;
+function createTripInfoTemplate(events, destinations, offers) {
   console.log(destinations, offers, events);
-  const priceEventsList = events.map((element) => element.basePrice);
-  const priceSum = priceEventsList.reduce((a, b) => a + b);
-  console.log(priceEventsList, priceSum);
+  const sumEvents = events.map((element) => element.basePrice).reduce((a, b) => a + b);
+
+  const allOffers = [];
+  events.forEach((event) => {
+    const currentOffers = offers.find((element) => element.type === event.type).offers;
+    const selectedOffers = event.offers.map((offerId) => currentOffers.find((element) => element.id === offerId));
+    allOffers.push(...selectedOffers);
+  });
+  const sumOffers = allOffers.map((element) => element.price).reduce((a,b) => a + b);
+
+  const sumEventsTotal = sumEvents + sumOffers;
 
   return (
     `<section class="trip-main__trip-info  trip-info">
@@ -16,21 +21,25 @@ function createTripInfoTemplate(eventModel) {
         <p class="trip-info__dates">Mar 18&nbsp;&mdash;&nbsp;20</p>
       </div>
       <p class="trip-info__cost">
-      Total: &euro;&nbsp;<span class="trip-info__cost-value">${priceSum}</span>
+      Total: &euro;&nbsp;<span class="trip-info__cost-value">${sumEventsTotal}</span>
       </p>
     </section>`
   );
 }
 
 export default class TripInfoView extends AbstractView {
-  #eventsModel = null;
+  #events = null;
+  #destinations = null;
+  #offers = null;
 
-  constructor({eventsModel}) {
+  constructor({events, destinations, offers}) {
     super();
-    this.#eventsModel = eventsModel;
+    this.#events = events;
+    this.#destinations = destinations;
+    this.#offers = offers;
   }
 
   get template() {
-    return createTripInfoTemplate(this.#eventsModel);
+    return createTripInfoTemplate(this.#events, this.#destinations, this.#offers);
   }
 }

@@ -9,11 +9,15 @@ dayjs.extend(duration);
 dayjs.extend(isSameOrBefore);
 dayjs.extend(isSameOrAfter);
 
-
-const DATE_SHORT_FORMAT = 'MMM D';
-const DATE_TIME_FORMAT = 'YYYY-MM-DDTHH:mm';
-const TIME_FORMAT = 'HH:mm';
-const DATE_FULL_FORMAT = 'DD/MM/YY HH:mm';
+const DateFormat = {
+  DATE_SHORT: 'MMM D',
+  DATE_TIME: 'YYYY-MM-DDTHH:mm',
+  TIME: 'HH:mm',
+  DATE_FULL: 'DD/MM/YY HH:mm',
+  MINUTES: 'mm[M]',
+  HOURS_MINUTE: 'HH[H] mm[M]',
+  DAYS_HOURS_MINUTES: 'DD[D] HH[H] mm[M]',
+};
 const MSEC_IN_SEC = 1000;
 const SEC_IN_MIN = 60;
 const MIN_IN_HOUR = 60;
@@ -23,19 +27,19 @@ const MSEC_IN_HOUR = MIN_IN_HOUR * SEC_IN_MIN * MSEC_IN_SEC;
 const MSEC_IN_DAY = HOUR_IN_DAY * MSEC_IN_HOUR;
 
 function getRefineEventDateTime(date) {
-  return date ? dayjs(date).utc().format(DATE_TIME_FORMAT) : '';
+  return date ? dayjs(date).utc().format(DateFormat.DATE_TIME) : '';
 }
 
 function getRefineEventDateShort(date) {
-  return date ? dayjs(date).utc().format(DATE_SHORT_FORMAT) : '';
+  return date ? dayjs(date).utc().format(DateFormat.DATE_SHORT) : '';
 }
 
 function getRefineTimeDate(date) {
-  return date ? dayjs(date).utc().format(TIME_FORMAT) : '';
+  return date ? dayjs(date).utc().format(DateFormat.TIME) : '';
 }
 
 function getRefineFullDate(date) {
-  return date ? dayjs(date).utc().format(DATE_FULL_FORMAT) : '';
+  return date ? dayjs(date).utc().format(DateFormat.DATE_FULL) : '';
 }
 
 function getTimeDifference(dateFrom, dateTo) {
@@ -43,13 +47,13 @@ function getTimeDifference(dateFrom, dateTo) {
   let durationPoint = 0;
   switch (true) {
     case (timeDifference >= MSEC_IN_DAY):
-      durationPoint = dayjs.duration(timeDifference).format('DD[D] HH[H] mm[M]');
+      durationPoint = dayjs.duration(timeDifference).format(DateFormat.DAYS_HOURS_MINUTES);
       break;
     case (timeDifference >= MSEC_IN_HOUR):
-      durationPoint = dayjs.duration(timeDifference).format('HH[H] mm[M]');
+      durationPoint = dayjs.duration(timeDifference).format(DateFormat.HOURS_MINUTE);
       break;
     case (timeDifference < MSEC_IN_HOUR):
-      durationPoint = dayjs.duration(timeDifference).format('mm[M]');
+      durationPoint = dayjs.duration(timeDifference).format(DateFormat.MINUTES);
       break;
   }
   return durationPoint;
