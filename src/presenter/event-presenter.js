@@ -149,7 +149,6 @@ export default class EventPresenter {
 
   #handleCanselClick = () => {
     this.#eventEditComponent.reset(this.#eventTrip);
-    this.#replaceEditorToEvent();
   };
 
   #handleDeleteClick = (event) => {
@@ -174,6 +173,5 @@ export default class EventPresenter {
       UpdateType.MINOR,
       eventTrip,
     );
-    this.#replaceEditorToEvent();
   };
 }

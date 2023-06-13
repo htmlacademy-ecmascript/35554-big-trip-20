@@ -1,5 +1,6 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 import {getRefineFullDate} from '../utils/events';
+import he from 'he';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
@@ -82,8 +83,6 @@ function createEventEditTemplate({state, destinations, offers}) {
   const buttonReset = createButtonResetTemplate(state, isDeleting);
 
   const isDestination = !destination;
-  const isDestinationName = isDestination ? '' : destination.name;
-  const isDestinationDescription = isDestination ? '' : destination.description;
 
   return (
     `<li class="trip-events__item">
@@ -109,7 +108,7 @@ function createEventEditTemplate({state, destinations, offers}) {
             ${type}
             </label>
             <input class="event__input  event__input--destination" id="event-destination-1"
-            type="text" name="event-destination" value="${isDestinationName}" list="destination-list-1" ${isDisabled ? 'disabled' : ''}>
+            type="text" name="event-destination" value="${isDestination ? '' : he.encode(destination.name)}" list="destination-list-1" ${isDisabled ? 'disabled' : ''}>
             <datalist id="destination-list-1"/>
               ${citiesTemplate}
             </datalist>
@@ -150,7 +149,7 @@ function createEventEditTemplate({state, destinations, offers}) {
 
           ${isDestination ? '' : `<section class="event__section  event__section--destination">
             <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-            <p class="event__destination-description">${isDestinationDescription}</p>
+            <p class="event__destination-description">${isDestination ? '' : destination.description}</p>
 
             <div class="event__photos-container">
               <div class="event__photos-tape">

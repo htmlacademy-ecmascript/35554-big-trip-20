@@ -1,9 +1,14 @@
 import dayjs from 'dayjs';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import utc from 'dayjs/plugin/utc';
 import duration from 'dayjs/plugin/duration';
 
 dayjs.extend(utc);
 dayjs.extend(duration);
+dayjs.extend(isSameOrBefore);
+dayjs.extend(isSameOrAfter);
+
 
 const DATE_SHORT_FORMAT = 'MMM D';
 const DATE_TIME_FORMAT = 'YYYY-MM-DDTHH:mm';
@@ -50,16 +55,16 @@ function getTimeDifference(dateFrom, dateTo) {
   return durationPoint;
 }
 
-function isEventFuture(dataFrom) {
-  return dayjs(dataFrom).isAfter(dayjs());
+function isEventFuture(dateFrom) {
+  return dayjs(dateFrom).isAfter(dayjs());
 }
 
-function isEventPresent(dataFrom) {
-  return dayjs(dataFrom).isSame((dayjs()));
+function isEventPresent(dateFrom, dateTo) {
+  return dayjs(dateFrom).isSameOrBefore((dayjs())) && dayjs(dateTo).isSameOrAfter((dayjs()));
 }
 
-function isEventPast(dataTo) {
-  return dayjs(dataTo).isBefore((dayjs()));
+function isEventPast(dateTo) {
+  return dayjs(dateTo).isBefore((dayjs()));
 }
 
 function sortByDay(eventA, eventB) {

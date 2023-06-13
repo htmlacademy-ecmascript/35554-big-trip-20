@@ -14,50 +14,55 @@ const siteTripMainElement = document.querySelector('.trip-main');
 const tripEventsElement = document.querySelector('.trip-events');
 const filtersContainerElement = document.querySelector('.trip-controls__filters');
 
-const eventsModel = new EventsModel({
-  eventsApiService: new EventsApiService(END_POINT, AUTHORIZATION)
-});
-const filterModel = new FilterModel();
-
-const tripPresenter = new TripPresenter({
-  tripContainer: tripEventsElement,
-  eventsModel,
-  filterModel,
-  onNewEventDestroy: handleNewEventFormClose
-});
-
-const filterPresenter = new FilterPresenter({
-  filterContainer: filtersContainerElement,
-  filterModel,
-  eventsModel
-});
-
-const infoPresenter = new InfoPresenter({
-  infoContainer: siteTripMainElement,
-  eventsModel
-});
-
-const newEventButtonComponent = new NewEventButtonView({
-  onClick: handleNewEventButtonClick
-});
-
-function handleNewEventFormClose() {
-  newEventButtonComponent.element.disabled = false;
-}
-
-function handleNewEventButtonClick() {
-  debugger
-  tripPresenter.createEvent();
-  newEventButtonComponent.element.disabled = true;
-}
-
-render(newEventButtonComponent, siteTripMainElement);
-
-filterPresenter.init();
-infoPresenter.init();
-tripPresenter.init();
-eventsModel.init()
-  .finally(() =>{
-    render(newEventButtonComponent, siteTripMainElement);
+async function main() {
+  const eventsModel = new EventsModel({
+    eventsApiService: new EventsApiService(END_POINT, AUTHORIZATION)
   });
 
+  await eventsModel.init();
+
+  const filterModel = new FilterModel();
+
+  const tripPresenter = new TripPresenter({
+    tripContainer: tripEventsElement,
+    eventsModel,
+    filterModel,
+    onNewEventDestroy: handleNewEventFormClose
+  });
+
+  const filterPresenter = new FilterPresenter({
+    filterContainer: filtersContainerElement,
+    filterModel,
+    eventsModel
+  });
+
+  const infoPresenter = new InfoPresenter({
+    infoContainer: siteTripMainElement,
+    eventsModel
+  });
+
+  const newEventButtonComponent = new NewEventButtonView({
+    onClick: handleNewEventButtonClick
+  });
+
+  function handleNewEventFormClose() {
+    newEventButtonComponent.element.disabled = false;
+  }
+
+  function handleNewEventButtonClick() {
+    tripPresenter.createEvent();
+    newEventButtonComponent.element.disabled = true;
+  }
+
+  render(newEventButtonComponent, siteTripMainElement);
+
+  filterPresenter.init();
+  infoPresenter.init();
+  tripPresenter.init();
+  eventsModel.init()
+    .finally(() => {
+      render(newEventButtonComponent, siteTripMainElement);
+    });
+}
+
+main();
