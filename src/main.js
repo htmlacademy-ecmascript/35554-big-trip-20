@@ -2,7 +2,6 @@ import TripPresenter from './presenter/trip-presenter';
 import FilterPresenter from './presenter/filter-presenter';
 import EventsModel from './model/events-model';
 import FilterModel from './model/filter-model';
-import InfoPresenter from './presenter/info-presenter';
 import {render} from './framework/render';
 import NewEventButtonView from './view/new-event-button-view';
 import EventsApiService from './events-api-service';
