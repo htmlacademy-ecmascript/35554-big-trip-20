@@ -13,6 +13,7 @@ const DateFormat = {
   DATE_SHORT: 'MMM D',
   DATE_TIME: 'YYYY-MM-DDTHH:mm',
   TIME: 'HH:mm',
+  ONLY_DAY: 'DD',
   DATE_FULL: 'DD/MM/YY HH:mm',
   MINUTES: 'mm[M]',
   HOURS_MINUTE: 'HH[H] mm[M]',
@@ -32,6 +33,10 @@ function getRefineEventDateTime(date) {
 
 function getRefineEventDateShort(date) {
   return date ? dayjs(date).utc().format(DateFormat.DATE_SHORT) : '';
+}
+
+function getRefineEventDateDayShort(date) {
+  return date ? dayjs(date).utc().format(DateFormat.ONLY_DAY) : '';
 }
 
 function getRefineTimeDate(date) {
@@ -93,6 +98,7 @@ function sortByPrice(eventA, eventB) {
 
 export {
   getRefineEventDateShort,
+  getRefineEventDateDayShort,
   getRefineTimeDate,
   getTimeDifference,
   getRefineFullDate,

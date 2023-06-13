@@ -36,11 +36,6 @@ async function main() {
     eventsModel
   });
 
-  // const infoPresenter = new InfoPresenter({
-  //   infoContainer: siteTripMainElement,
-  //   eventsModel
-  // });
-
   const newEventButtonComponent = new NewEventButtonView({
     onClick: handleNewEventButtonClick
   });
@@ -54,10 +49,7 @@ async function main() {
     newEventButtonComponent.element.disabled = true;
   }
 
-  // render(newEventButtonComponent, siteTripMainElement);
-
   filterPresenter.init();
-  // infoPresenter.init();
   tripPresenter.init();
   eventsModel.init()
     .finally(() => {
