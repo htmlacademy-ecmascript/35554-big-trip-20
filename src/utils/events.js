@@ -23,6 +23,7 @@ const MSEC_IN_SEC = 1000;
 const SEC_IN_MIN = 60;
 const MIN_IN_HOUR = 60;
 const HOUR_IN_DAY = 24;
+const ALERT_SHOW_TIME = 5000;
 
 const MSEC_IN_HOUR = MIN_IN_HOUR * SEC_IN_MIN * MSEC_IN_SEC;
 const MSEC_IN_DAY = HOUR_IN_DAY * MSEC_IN_HOUR;
@@ -70,6 +71,26 @@ const sortByTime = (eventA, eventB) => dayjs(eventB.dateTo).diff(dayjs(eventB.da
 
 const sortByPrice = (eventA, eventB) => eventB.basePrice - eventA.basePrice;
 
+const showAlert = (message) => {
+  const alertContainer = document.createElement('div');
+  alertContainer.style.zIndex = '100';
+  alertContainer.style.position = 'absolute';
+  alertContainer.style.left = '0';
+  alertContainer.style.top = '0';
+  alertContainer.style.right = '0';
+  alertContainer.style.padding = '10px 3px';
+  alertContainer.style.fontSize = '30px';
+  alertContainer.style.textAlign = 'center';
+  alertContainer.style.backgroundColor = 'red';
+
+  alertContainer.textContent = message;
+  document.body.append(alertContainer);
+
+  setTimeout(() => {
+    alertContainer.remove();
+  }, ALERT_SHOW_TIME);
+};
+
 export {
   getRefineEventDateShort,
   getRefineEventDateDayShort,
@@ -82,5 +103,6 @@ export {
   isEventPresent,
   sortByDay,
   sortByTime,
-  sortByPrice
+  sortByPrice,
+  showAlert
 };
