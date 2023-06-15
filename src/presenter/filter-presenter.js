@@ -1,7 +1,7 @@
 import {remove, render, replace} from '../framework/render';
 import FilterView from '../view/filter-view';
 import {FilterType, UpdateType} from '../const';
-import {filter} from '../utils/filter';
+import {Filter} from '../utils/filter';
 
 export default class FilterPresenter {
   #filterContainer = null;
@@ -23,7 +23,7 @@ export default class FilterPresenter {
     const events = this.#eventsModel.events;
     return Object.values(FilterType).map((type) => ({
       type,
-      count: filter[type](events).length
+      count: Filter[type](events).length
     }));
   }
 

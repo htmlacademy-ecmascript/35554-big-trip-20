@@ -8,7 +8,7 @@ const EmptyTripListTextType = {
   [FilterType.PAST]: 'There are no points in the past',
 };
 
-function createTripListEmptyTemplate(filterType) {
+const createTripListEmptyTemplate = (filterType) => {
   const emptyTripListTextValue = EmptyTripListTextType[filterType];
 
   return (
@@ -16,7 +16,7 @@ function createTripListEmptyTemplate(filterType) {
       ${emptyTripListTextValue}
     </p>`
   );
-}
+};
 
 export default class TripListEmptyView extends AbstractView {
   #filterType = null;

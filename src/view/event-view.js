@@ -6,16 +6,16 @@ import {
   getTimeDifference
 } from '../utils/events';
 
-function createEventOffersTemplate(offers) {
+const createEventOffersTemplate = (offers) => {
   return offers.map((offer) => `
   <li class="event__offer">
     <span class="event__offer-title">${offer.title}</span>
     &plus;&euro;&nbsp;
     <span class="event__offer-price">${offer.price}</span>
   </li>`).join('');
-}
+};
 
-function createEventTemplate(eventTrip, destinations, offers) {
+const createEventTemplate = (eventTrip, destinations, offers) => {
   const {basePrice, dateFrom, dateTo, type, isFavorite} = eventTrip;
   const destination = destinations.find((element) => element.id === eventTrip.destination);
   const isDestination = !destination;
@@ -71,7 +71,7 @@ function createEventTemplate(eventTrip, destinations, offers) {
        </div>
     </li>`
   );
-}
+};
 
 export default class EventView extends AbstractView {
   #eventTrip = null;

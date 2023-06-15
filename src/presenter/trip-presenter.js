@@ -5,7 +5,7 @@ import TripListEmptyView from '../view/trip-list-empty-view';
 import EventPresenter from './event-presenter';
 import {FilterType, SortType, UpdateType, UserAction} from '../const';
 import {sortByDay, sortByPrice, sortByTime} from '../utils/events';
-import {filter} from '../utils/filter';
+import {Filter} from '../utils/filter';
 import NewEventPresenter from './new-event-presenter';
 import LoadingView from '../view/loading-view';
 import UiBlocker from '../framework/ui-blocker/ui-blocker';
@@ -60,7 +60,7 @@ export default class TripPresenter {
   get events() {
     this.#filterType = this.#filterModel.filter;
     const events = this.#eventsModel.events;
-    const filteredEvents = filter[this.#filterType](events);
+    const filteredEvents = Filter[this.#filterType](events);
 
     switch (this.#currentSortType) {
       case SortType.DAY:
