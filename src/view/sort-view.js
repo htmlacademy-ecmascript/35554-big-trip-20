@@ -1,7 +1,7 @@
 import AbstractView from '../framework/view/abstract-view';
 import {SortType} from '../const';
 
-function createSortTemplate(currentSortType) {
+const createSortTemplate = (currentSortType) => {
   return (
     `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
         <div class="trip-sort__item  trip-sort__item--day">
@@ -37,7 +37,7 @@ function createSortTemplate(currentSortType) {
         </div>
     </form>`
   );
-}
+};
 
 export default class SortView extends AbstractView {
   #currentSortType = null;

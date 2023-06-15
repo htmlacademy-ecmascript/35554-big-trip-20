@@ -14,7 +14,7 @@ const EVENT_EMPTY = {
   isFavorite: false
 };
 
-function createEventEditTypeTemplate(offers, currentType) {
+const createEventEditTypeTemplate = (offers, currentType) => {
   const WAYPOINTS_TYPE = offers.map((offer) => offer.type);
   return WAYPOINTS_TYPE.map((type) => `
     <div class="event__type-item">
@@ -27,14 +27,14 @@ function createEventEditTypeTemplate(offers, currentType) {
        />
       <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${type}</label>
     </div>`).join('');
-}
+};
 
-function createDestinationCitiesTemplate(destinations) {
+const createDestinationCitiesTemplate = (destinations) => {
   const CITIES_NAME = destinations.map((element) => element.name);
   return CITIES_NAME.map((element) => `<option value="${element}"></option>`).join('');
-}
+};
 
-function createOffersTemplate(event, offers) {
+const createOffersTemplate = (event, offers) => {
   const isChecked = (offer) => event.offers.includes(offer.id) ? 'checked' : '';
   const currentOffers = offers.find((element) => element.type === event.type).offers;
 
@@ -48,16 +48,16 @@ function createOffersTemplate(event, offers) {
         <span class="event__offer-price">${offer.price}</span>
       </label>
     </div>`).join('');
-}
+};
 
-function createPicturesDestinationTemplate(destination) {
+const createPicturesDestinationTemplate = (destination) => {
   if (destination) {
     return destination.pictures.map((picture) => `
     <img class="event__photo" src="${picture.src}" alt="${picture.description}"/>`).join('');
   }
-}
+};
 
-function createButtonResetTemplate(state, isDisabled, isDeleting) {
+const createButtonResetTemplate = (state, isDisabled, isDeleting) => {
   const isNewEvent = !state.id;
   return isNewEvent
     ? `<button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>
@@ -69,9 +69,9 @@ function createButtonResetTemplate(state, isDisabled, isDeleting) {
       <button class="event__rollup-btn" type="button" ${isDisabled ? 'disabled' : ''}>
         <span class="visually-hidden">Open event</span>
       </button>`;
-}
+};
 
-function createEventEditTemplate({state, destinations, offers}) {
+const createEventEditTemplate = ({state, destinations, offers}) => {
   const eventTrip = state;
   const {basePrice, type, dateFrom, dateTo, isDisabled, isSaving, isDeleting} = eventTrip;
   const dateFullFrom = getRefineFullDate(dateFrom);
@@ -108,7 +108,7 @@ function createEventEditTemplate({state, destinations, offers}) {
             ${type}
             </label>
             <input class="event__input  event__input--destination" id="event-destination-1"
-            type="text" name="event-destination" value="${isDestination ? '' : he.encode(destination.name)}" list="destination-list-1" ${isDisabled ? 'disabled' : ''}>
+            type="text" name="event-destination" value="${isDestination ? '' : he.encode(destination.name)}" list="destination-list-1" ${isDisabled ? 'disabled' : ''} required>
             <datalist id="destination-list-1"/>
               ${citiesTemplate}
             </datalist>
@@ -117,11 +117,11 @@ function createEventEditTemplate({state, destinations, offers}) {
           <div class="event__field-group  event__field-group--time">
             <label class="visually-hidden" for="event-start-time-1">From</label>
             <input class="event__input  event__input--time" id="event-start-time-1" type="text"
-            name="event-start-time" value="${dateFullFrom}" ${isDisabled ? 'disabled' : ''}>
+            name="event-start-time" value="${dateFullFrom}" ${isDisabled ? 'disabled' : ''} required>
             &mdash;
             <label class="visually-hidden" for="event-end-time-1">To</label>
             <input class="event__input  event__input--time" id="event-end-time-1" type="text"
-            name="event-end-time" value="${dateFullTo}" ${isDisabled ? 'disabled' : ''}>
+            name="event-end-time" value="${dateFullTo}" ${isDisabled ? 'disabled' : ''} required>
           </div>
 
           <div class="event__field-group  event__field-group--price">
@@ -130,7 +130,7 @@ function createEventEditTemplate({state, destinations, offers}) {
               &euro;
             </label>
             <input class="event__input  event__input--price" id="event-price-1"
-            type="text" name="event-price" value="${basePrice}" ${isDisabled ? 'disabled' : ''}/>
+            type="number" min="1" name="event-price" value="${basePrice}" ${isDisabled ? 'disabled' : ''} required/>
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit"
@@ -161,7 +161,7 @@ function createEventEditTemplate({state, destinations, offers}) {
       </form>
     </li>`
   );
-}
+};
 
 export default class EventEditView extends AbstractStatefulView {
   #destinations = null;
