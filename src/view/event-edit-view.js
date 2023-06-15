@@ -108,7 +108,7 @@ const createEventEditTemplate = ({state, destinations, offers}) => {
             ${type}
             </label>
             <input class="event__input  event__input--destination" id="event-destination-1"
-            type="text" name="event-destination" value="${isDestination ? '' : he.encode(destination.name)}" list="destination-list-1" ${isDisabled ? 'disabled' : ''}>
+            type="text" name="event-destination" value="${isDestination ? '' : he.encode(destination.name)}" list="destination-list-1" ${isDisabled ? 'disabled' : ''} required>
             <datalist id="destination-list-1"/>
               ${citiesTemplate}
             </datalist>
@@ -117,11 +117,11 @@ const createEventEditTemplate = ({state, destinations, offers}) => {
           <div class="event__field-group  event__field-group--time">
             <label class="visually-hidden" for="event-start-time-1">From</label>
             <input class="event__input  event__input--time" id="event-start-time-1" type="text"
-            name="event-start-time" value="${dateFullFrom}" ${isDisabled ? 'disabled' : ''}>
+            name="event-start-time" value="${dateFullFrom}" ${isDisabled ? 'disabled' : ''} required>
             &mdash;
             <label class="visually-hidden" for="event-end-time-1">To</label>
             <input class="event__input  event__input--time" id="event-end-time-1" type="text"
-            name="event-end-time" value="${dateFullTo}" ${isDisabled ? 'disabled' : ''}>
+            name="event-end-time" value="${dateFullTo}" ${isDisabled ? 'disabled' : ''} required>
           </div>
 
           <div class="event__field-group  event__field-group--price">
@@ -130,7 +130,7 @@ const createEventEditTemplate = ({state, destinations, offers}) => {
               &euro;
             </label>
             <input class="event__input  event__input--price" id="event-price-1"
-            type="text" name="event-price" value="${basePrice}" ${isDisabled ? 'disabled' : ''}/>
+            type="number" min="1" name="event-price" value="${basePrice}" ${isDisabled ? 'disabled' : ''} required/>
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit"

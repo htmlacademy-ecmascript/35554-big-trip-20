@@ -138,7 +138,6 @@ export default class TripPresenter {
   };
 
   #handleModelEvent = (updateType, data) => {
-    debugger
     switch (updateType) {
       case UpdateType.PATCH:
         this.#eventPresenters.get(data.id).init(data);
