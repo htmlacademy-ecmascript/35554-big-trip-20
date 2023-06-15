@@ -6,14 +6,12 @@ import {
   getTimeDifference
 } from '../utils/events';
 
-const createEventOffersTemplate = (offers) => {
-  return offers.map((offer) => `
+const createEventOffersTemplate = (offers) => offers.map((offer) => `
   <li class="event__offer">
     <span class="event__offer-title">${offer.title}</span>
     &plus;&euro;&nbsp;
     <span class="event__offer-price">${offer.price}</span>
   </li>`).join('');
-};
 
 const createEventTemplate = (eventTrip, destinations, offers) => {
   const {basePrice, dateFrom, dateTo, type, isFavorite} = eventTrip;
