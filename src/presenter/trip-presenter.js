@@ -99,90 +99,6 @@ export default class TripPresenter {
     this.#newEventPresenter.init();
   }
 
-  #handleModeChange = () => {
-    this.#newEventPresenter.destroy();
-    this.#eventPresenters.forEach((presenter) => presenter.resetView());
-  };
-
-  #handleViewAction = async (actionType, updateType, update) => {
-    this.#uiBlocker.block();
-
-    switch (actionType) {
-      case UserAction.UPDATE_EVENT:
-        this.#eventPresenters.get(update.id).setSaving();
-        try {
-          await this.#eventsModel.updateEvent(updateType, update);
-        } catch (err) {
-          this.#eventPresenters.get(update.id).setAborting();
-        }
-        break;
-      case UserAction.ADD_EVENT:
-        this.#newEventPresenter.setSaving();
-        try {
-          await this.#eventsModel.addEvent(updateType, update);
-        } catch (err) {
-          this.#newEventPresenter.setAborting();
-        }
-        break;
-      case UserAction.DELETE_EVENT:
-        this.#eventPresenters.get(update.id).setDeleting();
-        try {
-          await this.#eventsModel.deleteEvent(updateType, update);
-        } catch (err) {
-          this.#eventPresenters.get(update.id).setAborting();
-        }
-        break;
-    }
-
-    this.#uiBlocker.unblock();
-  };
-
-  #handleModelEvent = (updateType, data) => {
-    switch (updateType) {
-      case UpdateType.PATCH:
-        this.#eventPresenters.get(data.id).init(data);
-        break;
-      case UpdateType.MINOR:
-        this.#clearTrip();
-        this.#renderTrip();
-        break;
-      case UpdateType.MAJOR:
-        this.#clearTrip({resetSortType: true});
-        this.#renderTrip();
-        break;
-      case UpdateType.INIT:
-        this.#isLoading = false;
-        remove(this.#loadingComponent);
-        this.#renderTrip();
-        render(this.#newEventButtonComponent, this.#infoContainer);
-        break;
-      case UpdateType.ERROR:
-        this.#isLoading = false;
-        remove(this.#loadingComponent);
-        this.#renderError();
-        break;
-    }
-  };
-
-  #handleSortTypeChange = (sortType) => {
-    if (this.#currentSortType === sortType) {
-      return;
-    }
-
-    this.#currentSortType = sortType;
-    this.#clearTrip();
-    this.#renderTrip();
-  };
-
-  #handleNewEventFormClose = () => {
-    this.#newEventButtonComponent.element.disabled = false;
-  };
-
-  #handleNewEventButtonClick = () => {
-    this.createEvent();
-    this.#newEventButtonComponent.element.disabled = true;
-  };
-
   #renderSort() {
     this.#sortComponent = new SortView({
       currentSortType: this.#currentSortType,
@@ -284,4 +200,88 @@ export default class TripPresenter {
     this.#renderInfo();
     this.#renderTripList();
   }
+
+  #handleModeChange = () => {
+    this.#newEventPresenter.destroy();
+    this.#eventPresenters.forEach((presenter) => presenter.resetView());
+  };
+
+  #handleViewAction = async (actionType, updateType, update) => {
+    this.#uiBlocker.block();
+
+    switch (actionType) {
+      case UserAction.UPDATE_EVENT:
+        this.#eventPresenters.get(update.id).setSaving();
+        try {
+          await this.#eventsModel.updateEvent(updateType, update);
+        } catch (err) {
+          this.#eventPresenters.get(update.id).setAborting();
+        }
+        break;
+      case UserAction.ADD_EVENT:
+        this.#newEventPresenter.setSaving();
+        try {
+          await this.#eventsModel.addEvent(updateType, update);
+        } catch (err) {
+          this.#newEventPresenter.setAborting();
+        }
+        break;
+      case UserAction.DELETE_EVENT:
+        this.#eventPresenters.get(update.id).setDeleting();
+        try {
+          await this.#eventsModel.deleteEvent(updateType, update);
+        } catch (err) {
+          this.#eventPresenters.get(update.id).setAborting();
+        }
+        break;
+    }
+
+    this.#uiBlocker.unblock();
+  };
+
+  #handleModelEvent = (updateType, data) => {
+    switch (updateType) {
+      case UpdateType.PATCH:
+        this.#eventPresenters.get(data.id).init(data);
+        break;
+      case UpdateType.MINOR:
+        this.#clearTrip();
+        this.#renderTrip();
+        break;
+      case UpdateType.MAJOR:
+        this.#clearTrip({resetSortType: true});
+        this.#renderTrip();
+        break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#renderTrip();
+        render(this.#newEventButtonComponent, this.#infoContainer);
+        break;
+      case UpdateType.ERROR:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#renderError();
+        break;
+    }
+  };
+
+  #handleSortTypeChange = (sortType) => {
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+
+    this.#currentSortType = sortType;
+    this.#clearTrip();
+    this.#renderTrip();
+  };
+
+  #handleNewEventFormClose = () => {
+    this.#newEventButtonComponent.element.disabled = false;
+  };
+
+  #handleNewEventButtonClick = () => {
+    this.createEvent();
+    this.#newEventButtonComponent.element.disabled = true;
+  };
 }
