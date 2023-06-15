@@ -10,6 +10,8 @@ import NewEventPresenter from './new-event-presenter';
 import LoadingView from '../view/loading-view';
 import UiBlocker from '../framework/ui-blocker/ui-blocker';
 import InfoPresenter from './info-presenter';
+import NewEventButtonView from '../view/new-event-button-view';
+import ErrorView from '../view/error-view';
 
 const TimeLimit = {
   LOWER_LIMIT: 350,
@@ -26,6 +28,8 @@ export default class TripPresenter {
   #loadingComponent = new LoadingView();
   #sortComponent = null;
   #tripEmptyComponent = null;
+  #newEventButtonComponent = null;
+  #errorComponent = null;
 
   #eventPresenters = new Map();
   #newEventPresenter = null;
@@ -38,7 +42,7 @@ export default class TripPresenter {
     upperLimit: TimeLimit.UPPER_LIMIT
   });
 
-  constructor({tripContainer, eventsModel, filterModel, onNewEventDestroy, infoContainer}) {
+  constructor({tripContainer, eventsModel, filterModel, infoContainer}) {
     this.#tripContainer = tripContainer;
     this.#infoContainer = infoContainer;
     this.#eventsModel = eventsModel;
@@ -47,10 +51,14 @@ export default class TripPresenter {
     this.#newEventPresenter = new NewEventPresenter({
       eventListContainer: this.#tripListComponent.element,
       onDataChange: this.#handleViewAction,
-      onDestroy: onNewEventDestroy,
+      onDestroy: this.#handleNewEventFormClose,
       destinations: this.destinations,
       offers: this.offers,
       onModeChange: this.#handleModeChange
+    });
+
+    this.#newEventButtonComponent = new NewEventButtonView({
+      onClick: this.#handleNewEventButtonClick
     });
 
     this.#eventsModel.addObserver(this.#handleModelEvent);
@@ -130,6 +138,7 @@ export default class TripPresenter {
   };
 
   #handleModelEvent = (updateType, data) => {
+    debugger
     switch (updateType) {
       case UpdateType.PATCH:
         this.#eventPresenters.get(data.id).init(data);
@@ -146,6 +155,12 @@ export default class TripPresenter {
         this.#isLoading = false;
         remove(this.#loadingComponent);
         this.#renderTrip();
+        render(this.#newEventButtonComponent, this.#infoContainer);
+        break;
+      case UpdateType.ERROR:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#renderError();
         break;
     }
   };
@@ -158,6 +173,15 @@ export default class TripPresenter {
     this.#currentSortType = sortType;
     this.#clearTrip();
     this.#renderTrip();
+  };
+
+  #handleNewEventFormClose = () => {
+    this.#newEventButtonComponent.element.disabled = false;
+  };
+
+  #handleNewEventButtonClick = () => {
+    this.createEvent();
+    this.#newEventButtonComponent.element.disabled = true;
   };
 
   #renderSort() {
@@ -203,6 +227,11 @@ export default class TripPresenter {
 
   #renderLoading() {
     render(this.#loadingComponent, this.#tripContainer, RenderPosition.AFTERBEGIN);
+  }
+
+  #renderError() {
+    const errorComponent = new ErrorView();
+    render(errorComponent, this.#tripContainer, RenderPosition.AFTERBEGIN);
   }
 
   #renderTripEmpty() {

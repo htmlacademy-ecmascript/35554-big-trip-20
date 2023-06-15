@@ -2,8 +2,6 @@ import TripPresenter from './presenter/trip-presenter';
 import FilterPresenter from './presenter/filter-presenter';
 import EventsModel from './model/events-model';
 import FilterModel from './model/filter-model';
-import {render} from './framework/render';
-import NewEventButtonView from './view/new-event-button-view';
 import EventsApiService from './events-api-service';
 
 const AUTHORIZATION = 'Basic Sskjkf3d8drbn4d';
@@ -13,7 +11,7 @@ const siteTripMainElement = document.querySelector('.trip-main');
 const tripEventsElement = document.querySelector('.trip-events');
 const filtersContainerElement = document.querySelector('.trip-controls__filters');
 
-async function main() {
+const main = async() => {
   const eventsModel = new EventsModel({
     eventsApiService: new EventsApiService(END_POINT, AUTHORIZATION)
   });
@@ -26,7 +24,6 @@ async function main() {
     tripContainer: tripEventsElement,
     eventsModel,
     filterModel,
-    onNewEventDestroy: handleNewEventFormClose,
     infoContainer: siteTripMainElement,
   });
 
@@ -36,25 +33,9 @@ async function main() {
     eventsModel
   });
 
-  const newEventButtonComponent = new NewEventButtonView({
-    onClick: handleNewEventButtonClick
-  });
-
-  function handleNewEventFormClose() {
-    newEventButtonComponent.element.disabled = false;
-  }
-
-  function handleNewEventButtonClick() {
-    tripPresenter.createEvent();
-    newEventButtonComponent.element.disabled = true;
-  }
-
   filterPresenter.init();
   tripPresenter.init();
-  eventsModel.init()
-    .finally(() => {
-      render(newEventButtonComponent, siteTripMainElement);
-    });
-}
+  eventsModel.init();
+};
 
 main();
