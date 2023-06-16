@@ -58,7 +58,7 @@ export default class TripPresenter {
     });
 
     this.#newEventButtonComponent = new NewEventButtonView({
-      onClick: this.#handleNewEventButtonClick
+      onNewEventButtonClick: this.#handleNewEventButtonClick
     });
 
     this.#eventsModel.addObserver(this.#handleModelEvent);
